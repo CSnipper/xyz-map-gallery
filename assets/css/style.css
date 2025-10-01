@@ -1,0 +1,252 @@
+/* XYZ Map Gallery Styles */
+.xyz-popup {
+    max-width: 300px;
+    background: white;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 10px;
+    font-family: Arial, sans-serif;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+}
+
+.xyz-popup img {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    margin-bottom: 10px;
+    border-radius: 3px;
+}
+
+.xyz-popup h3 {
+    margin: 0 0 10px 0;
+    font-size: 16px;
+    color: #333;
+}
+
+.xyz-popup p {
+    margin: 5px 0;
+    color: #666;
+}
+
+.xyz-details-link, .xyz-buy-link {
+    display: inline-block;
+    margin-top: 10px;
+    padding: 8px 12px;
+    background: #0073aa;
+    color: white;
+    text-decoration: none;
+    border-radius: 3px;
+    transition: background 0.3s;
+}
+
+.xyz-buy-link {
+    background: #28a745; /* Green for buy */
+}
+
+.xyz-details-link:hover, .xyz-buy-link:hover {
+    background: #005a87;
+}
+
+.xyz-buy-link:hover {
+    background: #218838;
+}
+
+/* Mini-map styles */
+.xyz-mini-map {
+    width: 300px;
+    height: 300px;
+    margin: 20px auto;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: box-shadow 0.3s;
+}
+
+.xyz-mini-map:hover {
+    box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+}
+
+/* Admin meta box styles */
+#xyz-map-preview {
+    width: 100%;
+    height: 300px;
+    border: 1px solid #ddd;
+    border-radius: 3px;
+    margin-top: 10px;
+}
+
+.geo-field, .sale-field {
+    margin-top: 10px;
+    padding: 10px;
+    background: #f9f9f9;
+    border-radius: 3px;
+}
+
+@media (max-width: 782px) {
+    #xyz-map-preview {
+        height: 200px;
+    }
+    
+    .xyz-mini-map {
+        width: 100%;
+        max-width: 300px;
+        height: 200px;
+    }
+    
+    .xyz-popup {
+        max-width: 250px;
+        font-size: 14px;
+    }
+    
+    .xyz-popup img {
+        width: 80px;
+        height: 80px;
+    }
+}
+
+/* Leaflet custom styles */
+.leaflet-popup-content-wrapper {
+    border-radius: 5px;
+}
+
+.leaflet-container {
+    font-family: Arial, sans-serif;
+}
+
+#xyz-map-meta-box {
+    display: flex !important;
+    flex-wrap: nowrap;
+    gap: 20px;
+    min-width: 600px;
+    box-sizing: border-box;
+    padding: 10px;
+}
+
+#xyz-map-meta-box .form-column {
+    flex: 1 1 33.33% !important;
+    min-width: 200px;
+    max-width: 300px;
+    box-sizing: border-box;
+}
+
+#xyz-map-meta-box .map-column {
+    flex: 2 1 66.67% !important;
+    min-width: 300px;
+    box-sizing: border-box;
+}
+
+#xyz-map-preview {
+    width: 100% !important;
+    border: 1px solid #ccc;
+    position: relative;
+    z-index: 1;
+}
+
+#xyz-map-meta-box p {
+    margin: 0 0 15px 0;
+}
+
+#xyz-map-meta-box label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+#xyz-map-meta-box input[type="text"],
+#xyz-map-meta-box select {
+    width: 100%;
+    max-width: 300px;
+}
+
+#icon-modal {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: #fff;
+    padding: 20px;
+    border: 1px solid #ccc;
+    z-index: 1000;
+    box-shadow: 0 0 10px rgba(0,0,0,0.5);
+    max-height: 80vh;
+    overflow-y: auto;
+}
+
+#icon-modal .close {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    cursor: pointer;
+    font-size: 20px;
+}
+
+.icon-gallery {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.icon-gallery img {
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+    border: 2px solid #ddd;
+    transition: border-color 0.3s;
+}
+
+.icon-gallery img.selected {
+    border-color: #0073aa;
+}
+
+#modal-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.5);
+    z-index: 999;
+}
+
+.xyz-marker-settings p {
+    margin: 0 0 15px 0;
+}
+
+.xyz-marker-settings label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+.xyz-marker-settings input[type="text"],
+.xyz-marker-settings select {
+    width: 100%;
+    max-width: 300px;
+}
+
+.xyz-map-settings p {
+    margin: 0 0 15px 0;
+}
+
+.xyz-map-settings label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+.xyz-map-settings input[type="text"],
+.xyz-map-settings input[type="number"],
+.xyz-map-settings select {
+    width: 100%;
+    max-width: 300px;
+}
+
+@media (max-width: 800px) {
+    #xyz-map-meta-box {
+        flex-wrap: wrap;
+    }
+    #xyz-map-meta-box .form-column,
+    #xyz-map-meta-box .map-column {
+        flex: 1 1 100% !important;
+        max-width: 100%;
+    }
+}
