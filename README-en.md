@@ -1,6 +1,6 @@
 # XYZ Map Gallery
 
-XYZ Map Gallery is a WordPress plugin for creating interactive maps with custom markers and photo galleries. It is designed for websites that need to present locations, places, or objects visually, with rich metadata and photo support. Supports XYZ tile maps compatibile with Leaflet.js.
+XYZ Map Gallery is a WordPress plugin for creating interactive maps with custom markers and photo galleries. It is designed for websites that need to present locations, places, or objects visually, with rich metadata and photo support.
 
 ## Features
 - Create unlimited custom maps
@@ -44,4 +44,3 @@ GPL v2 or later
 
 ---
 For more information, see the documentation or contact the author.
-

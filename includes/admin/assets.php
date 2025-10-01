@@ -1,8 +1,6 @@
 <?php
-if ( ! defined('ABSPATH') ) exit;
 namespace XYZ_Map_Gallery\Admin;
-
-if (!defined('ABSPATH')) exit;
+if ( ! defined('ABSPATH') ) exit;
 
 function enqueue_admin_scripts(){
   if (!function_exists('get_current_screen')) return;

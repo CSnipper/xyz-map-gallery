@@ -1,5 +1,4 @@
 <?php
-if ( ! defined('ABSPATH') ) exit;
 namespace XYZ_Map_Gallery;
 
 if (!defined('ABSPATH')) exit;
@@ -38,6 +37,7 @@ class Plugin {
     public function register_settings(){
         register_setting('xyz_maps_group','xyz_map_woo_enabled');
 
+        // BEZ literówek i spacji w nazwach:
         register_setting('xyz_maps_group','xyz_enable_gutenberg', ['type'=>'integer','default'=>1]);
         register_setting('xyz_maps_group','xyz_show_gutenberg',   ['type'=>'integer','default'=>1]);
         register_setting('xyz_maps_group','xyz_enable_elementor', ['type'=>'integer','default'=>1]);
@@ -55,7 +55,7 @@ class Plugin {
 
                 update_option('xyz_map_woo_enabled',   !empty($_POST['woo_enabled']) ? 1 : 0);
 
-                update_option('xyz_enable_gutenberg',  !empty($_POST['xyz_enable_gutenberg']) ? 1 : 0);
+                update_option('xyz_enable_gutenberg',  !empty($_POST['xyz_enable_gutenberg']) ? 1 : 0); // <-- brakowało
                 update_option('xyz_show_gutenberg',    !empty($_POST['xyz_show_gutenberg'])   ? 1 : 0);
                 update_option('xyz_enable_elementor',  !empty($_POST['xyz_enable_elementor']) ? 1 : 0);
                 update_option('xyz_show_elementor',    !empty($_POST['xyz_show_elementor'])   ? 1 : 0);
@@ -222,7 +222,8 @@ class Plugin {
           $west  = max($west,  $minLng);
           $east  = min($east,  $maxLng);
           if ($south > $north || $west > $east) {
-            wp_send_json_success([]);
+            wp_send_json_success([]); // poza zasięgiem mapy
+          }
         }
       }
 
