@@ -21,7 +21,7 @@ function xyz_render_big_map($map_id){
   $ver  = (defined('WP_DEBUG') && WP_DEBUG && file_exists($path)) ? filemtime($path) : '1.0.1';
   wp_enqueue_script('xyz-frontend-js', plugins_url('assets/js/frontend-map.js', XYZ_MAP_GALLERY_FILE), ['leaflet-js','leaflet-markercluster-js'], $ver, true);
 
-  // zapamiętaj stronę mapy (back-to-map)
+  // ...existing code...
   if (!is_admin()) {
     $page_id = get_queried_object_id();
     $opt_key = 'xyz_map_page_for_'.(int)$map_id;

@@ -3,9 +3,9 @@ if (!defined('ABSPATH')) exit;
 
 add_action('wp_head', function(){
   if (is_singular('gallery_item')) {
-    $url = get_permalink(); // kanoniczny: strona miejsca
+    $url = get_permalink(); 
   } elseif (is_singular('photo_item')) {
-    $url = get_permalink(); // pojedyncze zdjęcie
+  $url = get_permalink(); 
   } else {
     return;
   }

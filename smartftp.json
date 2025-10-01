@@ -1,0 +1,21 @@
+{
+  "name": "Stare Maniowy",
+  "host": "staremaniowy.pl",
+  "protocol": "ftp",
+  "port": 21,
+  "username": "staremaniowy",
+  "password": "!Jadzia!79!",
+  "remotePath": "/domains/marekwojtaszek.pl/public_html/wp-content/plugins/xyz-map-gallery",
+  "uploadOnSave": true,
+  "useTempFile": false,
+  "openSsh": false,
+  "watcher": {
+    "files": "**/*",
+    "autoUpload": true,
+    "autoDelete": false,
+    "ignoreCreate": false,
+    "ignoreUpdate": false,
+    "ignoreDelete": true
+  },
+  "ignore": []
+}

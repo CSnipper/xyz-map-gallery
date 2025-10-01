@@ -14,7 +14,6 @@ public function get_categories(){ return ['xyz-map-gallery']; }
     protected function register_controls(){
       $this->start_controls_section('content', ['label'=>__('Content','xyz-map-gallery')]);
 
-      // Zbuduj opcje miejsc (max 500 dla panelu)
       $opts = [];
       $posts = get_posts([
         'post_type'      => 'gallery_item',
@@ -54,7 +53,6 @@ public function get_categories(){ return ['xyz-map-gallery']; }
       $s = $this->get_settings_for_display();
       $place_id = isset($s['place_id']) ? (int)$s['place_id'] : 0;
 
-      // ZAWSZE wygeneruj mały placeholder (żeby zobaczyć, że render() się wykonał)
       echo '<div class="xyz-debug" style="font:12px/1.4 sans-serif;opacity:.6;margin-bottom:6px"></div>';
 
       if (!$place_id){
@@ -62,12 +60,10 @@ public function get_categories(){ return ['xyz-map-gallery']; }
         return;
       }
 
-      // assets lekkie
       wp_enqueue_style('leaflet-css','https://unpkg.com/leaflet@1.9.4/dist/leaflet.css',[], '1.9.4');
       wp_enqueue_script('leaflet-js','https://unpkg.com/leaflet@1.9.4/dist/leaflet.js',[], '1.9.4', true);
       wp_enqueue_script('xyz-mini-map', plugins_url('assets/js/mini-map.js', XYZ_MAP_GALLERY_FILE), ['leaflet-js'], '1.0.2', true);
 
-      // render właściwy
       if (function_exists('xyz_render_place_minimap')) {
         echo xyz_render_place_minimap($place_id);
       } else {

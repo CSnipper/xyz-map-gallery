@@ -2,8 +2,8 @@
 if (!defined('ABSPATH')) exit;
 
 /**
- * 1) Jeśli shortcody są całkowicie WYŁĄCZONE (Enable shortcodes = OFF),
- *    rejestrujemy „no-op” handlery i kończymy plik.
+ * 1) If shortcodes are completely DISABLED (Enable shortcodes = OFF),
+ *    register "no-op" handlers and end the file.
  */
 if (function_exists('xyz_can_enable_shortcode') && ! xyz_can_enable_shortcode()) {
   foreach (['xyz_map','xyz_map_link','xyz_place_minimap','xyz_place_gallery','xyz_back_to_map'] as $tag) {
@@ -13,18 +13,18 @@ if (function_exists('xyz_can_enable_shortcode') && ! xyz_can_enable_shortcode())
 }
 
 /**
- * Helper: szybkie sprawdzanie „Show shortcodes”.
- * Gdy SHOW=OFF — handler nic nie zwraca (nie ma surowego tekstu shortcodu).
+ * Helper: quick check for "Show shortcodes".
+ * If SHOW=OFF — handler returns nothing (no raw shortcode text).
  */
 function xyz_sc_guard() {
   return function_exists('xyz_can_show_shortcode') && ! xyz_can_show_shortcode();
 }
 
-// — link „wróć do mapy”
+// — "back to map" link
 add_shortcode('xyz_map_link', function($atts){
   if (xyz_sc_guard()) return '';
   $a = shortcode_atts([
-    'url'=>'','map'=>'','marker'=>'','text'=>'Wróć na mapę','class'=>'','target'=>'',
+    'url'=>'','map'=>'','marker'=>'','text'=>'Back to map','class'=>'','target'=>'',
   ], $atts, 'xyz_map_link');
   if (empty($a['url'])) return '';
   $args = [];

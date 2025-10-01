@@ -2,12 +2,12 @@
 jQuery(document).ready(function($){
   if (typeof window.xyzMarkerAdmin === 'undefined') {
     console.warn('xyzMarkerAdmin missing');
-    return; // spokojnie wychodzimy – jesteśmy na innym ekranie niż edycja CPT
+  return; // exit quietly – we are on a different screen than CPT edit
   }
 
   var map = null, marker = null;
 
-  // czekamy aż metabox pojawi się w DOM (Gutenberg potrafi doważać z opóźnieniem)
+  // wait until the metabox appears in the DOM (Gutenberg can load it with a delay)
   function waitForUI() {
     var $select    = $('#map_id');
     var $col       = $('#map-column');
@@ -39,7 +39,7 @@ jQuery(document).ready(function($){
     }
 
     function initializeMap() {
-      // ukryj podgląd, jeśli brak mapy
+      // hide preview if there is no map
       var map_id = parseInt($select.val(), 10) || 0;
       if (!map_id) {
         $col.hide();
@@ -47,7 +47,7 @@ jQuery(document).ready(function($){
       }
       $col.show();
 
-      // wyczyść poprzednią mapę
+      // clear previous map
       if (map) {
         map.remove();
         map = null;
@@ -115,7 +115,7 @@ jQuery(document).ready(function($){
           map.setView(center, Math.max(13, parseInt(d.zoom_min, 10) || 13));
         }
 
-        // klik na mapie = ustaw pozycję
+      // ...existing code...
         map.on('click', function (e) {
           var ll = e.latlng;
           updateMarker(ll);
@@ -153,7 +153,7 @@ jQuery(document).ready(function($){
       });
     }
 
-    // wybór ikony z filtrem
+  // ...existing code...
     $('#select-icon').on('click', function (e) {
       e.preventDefault();
 

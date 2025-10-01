@@ -1,4 +1,5 @@
 <?php
+if ( ! defined('ABSPATH') ) exit;
 namespace XYZ_Map_Gallery\Admin;
 
 if (!defined('ABSPATH')) exit;

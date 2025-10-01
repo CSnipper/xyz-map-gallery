@@ -1,4 +1,5 @@
 <?php
+if ( ! defined('ABSPATH') ) exit;
 
 if (defined('XYZ_MG_ADMIN_MAP_INCLUDED')) return;
 define('XYZ_MG_ADMIN_MAP_INCLUDED', true);

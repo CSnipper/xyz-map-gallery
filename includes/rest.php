@@ -8,12 +8,12 @@ add_action('rest_api_init', function () {
     'callback' => function(WP_REST_Request $r){
       global $wpdb;
 
-      $type = sanitize_key($r->get_param('type')); // map | place
+      $type = sanitize_key($r->get_param('type'));
       $q    = trim((string)$r->get_param('q'));
-      $q    = mb_substr($q, 0, 80);               // limit długości
-      if (strlen($q) < 2) return rest_ensure_response([]); // zbyt krótko
+  $q    = mb_substr($q, 0, 80);               
+  if (strlen($q) < 2) return rest_ensure_response([]);
 
-      // throttling per IP + route
+  // throttling per IP + route
       $ip  = $_SERVER['REMOTE_ADDR'] ?? '0.0.0.0';
       $key = 'xyz_search_rl_'.md5($ip.'|'.$type);
       $hits = (int) get_transient($key); $hits++;
@@ -43,10 +43,3 @@ add_action('rest_api_init', function () {
     }
   ]);
 });
-
-
-
-
-
-
-

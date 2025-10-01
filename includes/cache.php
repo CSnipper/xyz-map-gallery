@@ -15,7 +15,7 @@ function xyz_invalidate_map_cache($map_id){
   if ($map_id) delete_transient('xyz_map_payload_'.(int)$map_id);
 }
 
-// bumpy po zmianach markerów
+// bump after marker changes
 add_action('save_post_gallery_item', function($post_id,$post){
   if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) return;
   if ($post->post_type!=='gallery_item') return;

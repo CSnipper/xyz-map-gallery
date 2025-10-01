@@ -2,7 +2,7 @@
 if (!defined('ABSPATH')) exit;
 
 /**
- * 1) Dodaj pozycję w menu akcji zbiorczych
+ * 1) Add an item to the bulk actions menu
  */
 add_filter('bulk_actions-edit-gallery_item', function($actions){
     $actions['xyz_assign_map'] = __('Assign to map…', 'xyz-map-gallery');
@@ -10,7 +10,7 @@ add_filter('bulk_actions-edit-gallery_item', function($actions){
 });
 
 /**
- * 2) UI: select z mapami obok „Działania zbiorcze”
+ * 2) UI: select with maps next to "Bulk actions"
  */
 add_action('admin_footer-edit.php', function () {
     $screen = get_current_screen();
@@ -26,7 +26,6 @@ add_action('admin_footer-edit.php', function () {
       if(!forms.length) return;
 
       forms.forEach(function(form){
-        // wstaw select obok pierwszego selecta „action”
         const bulk1 = form.querySelector('select[name="action"]');
         if(!bulk1) return;
 
@@ -46,7 +45,6 @@ add_action('admin_footer-edit.php', function () {
         bulk1.after(wrap);
       });
 
-      // walidacja: jeśli wybrano naszą akcję, wymagaj mapy
       document.addEventListener('submit', function(e){
         const form = e.target;
         if(!form || form.id !== 'posts-filter') return;
@@ -66,7 +64,7 @@ add_action('admin_footer-edit.php', function () {
 });
 
 /**
- * 3) Obsługa akcji (ustawia meta _map_id)
+ * ...existing code...
  */
 add_filter('handle_bulk_actions-edit-gallery_item', function($redirect_to, $doaction, $post_ids){
     if ($doaction !== 'xyz_assign_map') return $redirect_to;
@@ -75,7 +73,7 @@ add_filter('handle_bulk_actions-edit-gallery_item', function($redirect_to, $doac
         return add_query_arg(['xyz_assign_map'=>'denied'], $redirect_to);
     }
 
-    check_admin_referer('bulk-posts'); // nonce z formularza listy postów
+    check_admin_referer('bulk-posts');
 
     $map_id = isset($_REQUEST['xyz_target_map']) ? absint($_REQUEST['xyz_target_map']) : 0;
     if (!$map_id) {

@@ -17,7 +17,7 @@ class XYZ_Widget_Photos_Grid extends Elementor\Widget_Base {
         'label' => __('Place (title)','xyz-map-gallery'),
         'type'  => Controls_Manager::TEXT,
         'label_block' => true,
-        'description' => __('Wpisz tytuł miejsca (opcjonalnie, służy tylko edycji).','xyz-map-gallery'),
+  'description' => __('Enter place title (optional, for editing only).','xyz-map-gallery'),
       ]);
 
       $this->add_control('place_id', [

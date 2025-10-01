@@ -1,4 +1,5 @@
 <?php
+if ( ! defined('ABSPATH') ) exit;
 /*
 Plugin Name: XYZ Map Gallery
 Description: A plugin to create and manage interactive maps with markers based on XYZ tile maps. Geocode or pixel coords.

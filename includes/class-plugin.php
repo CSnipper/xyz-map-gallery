@@ -1,4 +1,5 @@
 <?php
+if ( ! defined('ABSPATH') ) exit;
 namespace XYZ_Map_Gallery;
 
 if (!defined('ABSPATH')) exit;
@@ -37,7 +38,6 @@ class Plugin {
     public function register_settings(){
         register_setting('xyz_maps_group','xyz_map_woo_enabled');
 
-        // BEZ literówek i spacji w nazwach:
         register_setting('xyz_maps_group','xyz_enable_gutenberg', ['type'=>'integer','default'=>1]);
         register_setting('xyz_maps_group','xyz_show_gutenberg',   ['type'=>'integer','default'=>1]);
         register_setting('xyz_maps_group','xyz_enable_elementor', ['type'=>'integer','default'=>1]);
@@ -55,8 +55,7 @@ class Plugin {
 
                 update_option('xyz_map_woo_enabled',   !empty($_POST['woo_enabled']) ? 1 : 0);
 
-                // <- TE 8 opcji zapisuj ZAWSZE z POST:
-                update_option('xyz_enable_gutenberg',  !empty($_POST['xyz_enable_gutenberg']) ? 1 : 0); // <-- brakowało
+                update_option('xyz_enable_gutenberg',  !empty($_POST['xyz_enable_gutenberg']) ? 1 : 0);
                 update_option('xyz_show_gutenberg',    !empty($_POST['xyz_show_gutenberg'])   ? 1 : 0);
                 update_option('xyz_enable_elementor',  !empty($_POST['xyz_enable_elementor']) ? 1 : 0);
                 update_option('xyz_show_elementor',    !empty($_POST['xyz_show_elementor'])   ? 1 : 0);
@@ -68,7 +67,6 @@ class Plugin {
                 echo '<div class="updated"><p>'.esc_html__('Settings saved.','xyz-map-gallery').'</p></div>';
               }
 
-              // PO zapisie – ZAWSZE świeże wartości do checked():
               $woo_enabled     = (int) get_option('xyz_map_woo_enabled', 0);
               $gutenberg_on    = (int) get_option('xyz_enable_gutenberg', 1);
               $gutenberg_front = (int) get_option('xyz_show_gutenberg',   1);
@@ -135,11 +133,9 @@ class Plugin {
 
 
     public function xyz_get_map_data(){
-      // nagłówki bezpieczeństwa + brak cache
       send_nosniff_header();
       nocache_headers();
 
-      // uprawnienia i nonce
       if ( ! current_user_can('edit_posts') ) {
         wp_send_json_error(['message'=>'forbidden'], 403);
       }
@@ -147,7 +143,6 @@ class Plugin {
         wp_send_json_error(['message'=>'bad nonce'], 403);
       }
 
-      // wejście
       $map_id = isset($_GET['map_id']) ? absint($_GET['map_id']) : 0;
       if ( ! $map_id ) {
         wp_send_json_error(['message'=>'missing map_id'], 400);
@@ -163,7 +158,6 @@ class Plugin {
         wp_send_json_error(['message'=>'map not found'], 404);
       }
 
-      // bounds → [[lat1,lng1],[lat2,lng2]]
       $bounds = null;
       if (!empty($map->bounds)) {
         $b = json_decode($map->bounds, true);
@@ -190,16 +184,13 @@ class Plugin {
 
 
     public function ajax_get_markers_in_bbox(){
-      // bezpieczne nagłówki (opcjonalnie, ale warto)
       send_nosniff_header();
       nocache_headers();
 
-      // nonce (pole 'nonce' w zapytaniu)
       if ( ! check_ajax_referer('xyz_bbox_nonce', 'nonce', false) ) {
         wp_send_json_error(['message'=>'Bad nonce'], 403);
       }
 
-      // wejścia
       $map_id = isset($_REQUEST['map_id']) ? absint($_REQUEST['map_id']) : 0;
       $bbox   = isset($_REQUEST['bbox'])   ? trim((string)$_REQUEST['bbox']) : '';
       $zoom   = isset($_REQUEST['zoom'])   ? max(0, min(30, absint($_REQUEST['zoom']))) : 0;
@@ -211,13 +202,11 @@ class Plugin {
         wp_send_json_error(['message'=>'Missing map_id or bbox'], 400);
       }
 
-      // format bbox
       if ( ! preg_match('/^\s*-?\d+(\.\d+)?\s*,\s*-?\d+(\.\d+)?\s*,\s*-?\d+(\.\d+)?\s*,\s*-?\d+(\.\d+)?\s*$/', $bbox) ) {
         wp_send_json_error(['message'=>'Bad bbox format'], 400);
       }
       list($south,$west,$north,$east) = array_map('floatval', explode(',', $bbox, 4));
 
-      // PATCH: przytnij bbox do granic mapy (jeśli są)
       global $wpdb;
       $tbl = $wpdb->prefix.'xyz_maps';
       $map = $wpdb->get_row($wpdb->prepare("SELECT bounds FROM $tbl WHERE id=%d", $map_id));
@@ -233,12 +222,10 @@ class Plugin {
           $west  = max($west,  $minLng);
           $east  = min($east,  $maxLng);
           if ($south > $north || $west > $east) {
-            wp_send_json_success([]); // poza zasięgiem mapy
-          }
+            wp_send_json_success([]);
         }
       }
 
-      // throttling per IP+mapa (to co już masz)
       $ip  = xyz_client_ip();
       $key = 'xyz_bbox_rl_'.md5($ip.'|'.(string)$map_id);
       $hits = (int) get_transient($key);
@@ -256,7 +243,6 @@ class Plugin {
 
     if (empty($ids)) wp_send_json_success([]);
 
-    // cache key per (map_id, bbox, zoom), zaokrąglij bbox do 5–6 miejsc (redukuje klucze)
     $bbox_key = implode(',', array_map(function($v){ return number_format((float)$v, 6, '.', ''); }, [ $south,$west,$north,$east ]));
     $cache_key = 'xyz_bbox_resp_'.md5($map_id.'|'.$bbox_key.'|'.$zoom);
     $cached = get_transient($cache_key);
@@ -297,7 +283,6 @@ class Plugin {
       ];
       if (count($out) >= $limit) break;
     }
-    // króciutki cache – np. 8 sekund
     set_transient($cache_key, $out, 8);
     wp_send_json_success($out);
   }

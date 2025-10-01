@@ -24,7 +24,7 @@ class XYZ_Widget_Big_Map extends \Elementor\Widget_Base {
         }
       }
 
-      // SELECT2: wybór mapy po tytule (z filtrem klientowym)
+  // ...existing code...
       $this->add_control('map_id', [
         'label'        => __('Map','xyz-map-gallery'),
         'type'         => \Elementor\Controls_Manager::SELECT2,
@@ -59,7 +59,7 @@ class XYZ_Widget_Big_Map extends \Elementor\Widget_Base {
       wp_enqueue_script('leaflet-markercluster-js','https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js',['leaflet-js'],'1.5.3', true);
       wp_enqueue_script('xyz-frontend-js', plugins_url('assets/js/frontend-map.js', XYZ_MAP_GALLERY_FILE), ['leaflet-js','leaflet-markercluster-js'], '1.0.1', true);
 
-      // bezpośrednie renderowanie (bez wymagania włączonych shortcodów)
+  // ...existing code...
       echo xyz_render_big_map($map_id);
     }
 

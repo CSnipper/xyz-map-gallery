@@ -1,7 +1,6 @@
 <?php
 if (!defined('ABSPATH')) exit;
 
-// Kategoria dla panelu
 add_action('elementor/elements/categories_registered', function($mgr){
     if (method_exists($mgr, 'add_category')) {
         $mgr->add_category('xyz-map-gallery', [
@@ -10,7 +9,6 @@ add_action('elementor/elements/categories_registered', function($mgr){
     }
 });
 
-// Rejestracja widżetów (tu ładujemy pliki klas)
 add_action('elementor/widgets/register', function($widgets_manager){
     $base = plugin_dir_path(XYZ_MAP_GALLERY_FILE) . 'includes/elementor/';
 
@@ -23,7 +21,6 @@ add_action('elementor/widgets/register', function($widgets_manager){
     if (class_exists('XYZ_Widget_Big_Map'))     $widgets_manager->register(new \XYZ_Widget_Big_Map());
 }, 0);
 
-// Style/skrypty globalne (front + edytor)
 add_action('elementor/frontend/after_enqueue_styles', function () {
     wp_enqueue_style('leaflet-css','https://unpkg.com/leaflet@1.9.4/dist/leaflet.css',[], '1.9.4');
     wp_enqueue_style('xyz-frontend-css', plugins_url('assets/css/frontend.css', XYZ_MAP_GALLERY_FILE), ['leaflet-css'], '1.0.1');
@@ -34,7 +31,6 @@ add_action('elementor/frontend/after_enqueue_scripts', function () {
     wp_register_script('leaflet-markercluster-js','https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js',['leaflet-js'],'1.5.3',true);
 });
 
-// Skrypty edytora (opcjonalne autocomplete)
 add_action('elementor/editor/after_enqueue_scripts', function(){
     wp_enqueue_script(
         'xyz-el-ac',
