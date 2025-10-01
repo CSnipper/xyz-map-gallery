@@ -1,0 +1,36 @@
+name: WordPress Plugin Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  build-release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '7.4'
+
+      - name: PHP lint
+        run: |
+          find . -type f -name "*.php" -exec php -l {} \;
+
+      - name: Prepare plugin zip
+        run: |
+          PLUGIN_DIR=xyz-map-gallery
+          mkdir $PLUGIN_DIR
+          rsync -av --exclude='.git*' --exclude='.github*' --exclude='*.zip' --exclude='node_modules' --exclude='tests*' ./ $PLUGIN_DIR/
+          zip -r $PLUGIN_DIR.zip $PLUGIN_DIR
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: xyz-map-gallery.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
