@@ -2,7 +2,7 @@
 /*
 Plugin Name: XYZ Map Gallery
 Description: A plugin to create and manage interactive maps with markers based on XYZ tile maps. Geocode or pixel coords.
-Version: 1.4
+Version: 1.0
 Author: Marek Wojtaszek
 Text Domain: xyz-map-gallery
 Domain Path: /languages
