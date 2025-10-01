@@ -3,11 +3,6 @@ name: WordPress Plugin Release
 on:
   push:
     tags:
-      - 'v*'
-
-on:
-  push:
-    tags:
       - '*'
 
 jobs:
