@@ -23,10 +23,8 @@ jobs:
 
       - name: Prepare plugin zip
         run: |
-          PLUGIN_DIR=xyz-map-gallery
-          mkdir $PLUGIN_DIR
-          rsync -av --exclude='.git*' --exclude='.github*' --exclude='*.zip' --exclude='node_modules' --exclude='tests*' ./ $PLUGIN_DIR/
-          zip -r $PLUGIN_DIR.zip $PLUGIN_DIR
+          EXCLUDES=(--exclude='.git*' --exclude='.github*' --exclude='README-en.md' --exclude='README-pl.md' --exclude='smartftp.json' --exclude='.gitattributes' --exclude='.gitignore')
+          zip -r xyz-map-gallery.zip . "${EXCLUDES[@]}"
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v1
