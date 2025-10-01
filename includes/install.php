@@ -2,8 +2,6 @@
 if ( ! defined('ABSPATH') ) exit;
 namespace XYZ_Map_Gallery;
 
-if (!defined('ABSPATH')) exit;
-
 class Install {
   public static function activate() {
     global $wpdb;

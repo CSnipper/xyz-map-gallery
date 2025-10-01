@@ -15,15 +15,15 @@ jQuery(document).ready(function ($) {
         ? '<a href="'+m.link+'"><img class="xyz-thumb" src="'+m.thumbUrl+'" loading="lazy" alt="'+(m.title||'')+'" width="150" height="150" style="max-width:150px;height:auto;display:block;margin-bottom:6px;"></a>'
         : '';
       var title = m.title ? '<div><a href="'+m.link+'"><strong>'+m.title+'</strong></a></div>' : '';
-        var owner = m.owner ? '<div style="font-size:12px;opacity:.85;margin-top:2px;">Owner: '+m.owner+'</div>' : '';
-        var count = (typeof m.count === 'number')
-          ? '<div style="font-size:12px;opacity:.8;margin-top:2px;">Photos: '+m.count+'</div>'
-          : '';
-        return '<div class="xyz-map-popup">'+img+title+owner+count+'</div>';
+      var owner = m.owner ? '<div style="font-size:12px;opacity:.85;margin-top:2px;">Właściciel: '+m.owner+'</div>' : '';
+      var count = (typeof m.count === 'number')
+        ? '<div style="font-size:12px;opacity:.8;margin-top:2px;">Zdjęcia: '+m.count+'</div>'
+        : '';
+      return '<div class="xyz-map-popup">'+img+title+owner+count+'</div>';
     }
 
     var isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-  console.log("Initializing map", map_id, data.tilesUrl);
+    console.log("Inicjalizuję mapę", map_id, data.tilesUrl);
 
     var map = L.map('xyz-map-' + map_id, {
       minZoom: data.zoomLevels && data.zoomLevels.min ? data.zoomLevels.min : 0,
@@ -38,7 +38,7 @@ jQuery(document).ready(function ($) {
     });
     window['xyzMap_' + map_id] = map;
 
-    // Ctrl/⌘ + wheel = zoom map, wheel alone scrolls the page
+    // Ctrl/⌘ + wheel = zoom mapy, samo wheel przewija stronę
     if (!isMobile) {
       map.getContainer().addEventListener('wheel', function (e) {
         var rect = map.getContainer().getBoundingClientRect();
@@ -55,7 +55,7 @@ jQuery(document).ready(function ($) {
 
     var tilesUrl = data.tilesUrl;
 
-  // ...existing code...
+    // Obsługa kafelków (jpg/png) z {z}/{x}/{y}
     if (tilesUrl && tilesUrl.indexOf('{z}') !== -1) {
       L.tileLayer(tilesUrl, {
         attribution: 'XYZ Map Gallery',
@@ -64,7 +64,7 @@ jQuery(document).ready(function ($) {
         tileSize: 256
       }).addTo(map);
     }
-  // ...existing code...
+    // Obsługa pojedynczego obrazu (np. zwykły .jpg bez {z}/{x}/{y})
     else if (tilesUrl) {
       if (data.imageSize && data.imageSize.width && data.imageSize.height) {
         var bounds = [[0, 0], [parseInt(data.imageSize.height, 10), parseInt(data.imageSize.width, 10)]];
@@ -72,7 +72,7 @@ jQuery(document).ready(function ($) {
         map.fitBounds(bounds);
       }
     }
-  // ...existing code...
+    // Fallback na OSM tylko jeśli nic nie ustawiono
     else {
       L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '© OpenStreetMap'
@@ -156,7 +156,7 @@ jQuery(document).ready(function ($) {
     
     rebuildIndex();
 
-  // ...existing code...
+    // --- DEEP LINK: ?marker=ID (po dodaniu markerów!) ---
     (function () {
       var id = new URLSearchParams(window.location.search).get('marker');
       if (!id) return;
@@ -241,7 +241,7 @@ jQuery(document).ready(function ($) {
       return hits.slice(0,8);
     }
 
-  // ...existing code...
+    // Render wyników
     var active = -1;
     function show(results){
       if (!results.length){
@@ -360,11 +360,11 @@ jQuery(document).ready(function ($) {
       .finally(function(){ inflight = null; });
     }
 
-  // ...existing code...
+    // pierwsze dociągnięcie po ustawieniu widoku
     map.once('moveend', fetchBBoxMarkers);
     map.once('zoomend', fetchBBoxMarkers);
 
-  // ...existing code...
+    // doładowuj przy ruchach/zoomie
     map.on('moveend zoomend', fetchBBoxMarkers);
 
     document.addEventListener('keydown', function(e){
@@ -376,7 +376,7 @@ jQuery(document).ready(function ($) {
     });
   }
 
-  // ...existing code...
+  // wykryj wszystkie mapy dostępne w window i zainicjalizuj
   for (var key in window) {
     if (!/^xyzMapData_\d+$/.test(key)) continue;
     var map_id = key.split('_')[1];

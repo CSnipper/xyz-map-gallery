@@ -1,0 +1,101 @@
+msgid "Rate limited"
+msgstr "Ograniczono dostęp"
+
+msgid "Map not found."
+msgstr "Mapa nie została znaleziona."
+
+msgid "No photos yet."
+msgstr "Brak zdjęć."
+
+msgid "XYZ Big Map"
+msgstr "XYZ Duża Mapa"
+
+msgid "Content"
+msgstr "Treść"
+
+msgid "Map"
+msgstr "Mapa"
+
+msgid "Start typing to filter the list."
+msgstr "Zacznij pisać, aby filtrować listę."
+
+msgid "No maps found. Create one first."
+msgstr "Nie znaleziono map. Najpierw utwórz mapę."
+
+msgid "Pick a map in the sidebar."
+msgstr "Wybierz mapę w pasku bocznym."
+
+msgid "XYZ Map Gallery"
+msgstr "XYZ Galeria Map"
+
+msgid "Type map title to search…"
+msgstr "Wpisz tytuł mapy, aby wyszukać…"
+
+msgid "XYZ Mini Map"
+msgstr "XYZ Mini Mapa"
+
+msgid "Place"
+msgstr "Miejsce"
+
+msgid "Type place title to search…"
+msgstr "Wpisz tytuł miejsca, aby wyszukać…"
+
+msgid "XYZ Photos Grid"
+msgstr "XYZ Siatka Zdjęć"
+
+msgid "Per page"
+msgstr "Na stronę"
+
+msgid "Back to map"
+msgstr "Powrót do mapy"
+
+msgid "Unsupported file"
+msgstr "Nieobsługiwany plik"
+
+msgid "Upload file"
+msgstr "Wyślij plik"
+
+msgid "Assign to map"
+msgstr "Przypisz do mapy"
+
+msgid "— none —"
+msgstr "— brak —"
+
+msgid "Column mapping"
+msgstr "Mapowanie kolumn"
+
+msgid "Title"
+msgstr "Tytuł"
+
+msgid "Description"
+msgstr "Opis"
+
+msgid "Owner"
+msgstr "Właściciel"
+
+msgid "Tags"
+msgstr "Tagi"
+
+msgid "Icon"
+msgstr "Ikona"
+
+msgid "External ID"
+msgstr "Zewnętrzny ID"
+
+msgid "Latitude"
+msgstr "Szerokość geograficzna"
+
+msgid "Longitude"
+msgstr "Długość geograficzna"
+
+msgid "Options"
+msgstr "Opcje"
+
+msgid "Dry-run"
+msgstr "Testowo (bez zmian)"
+
+msgid "Overwrite existing"
+msgstr "Nadpisz istniejące"
+
+msgid "Run import"
+msgstr "Uruchom import"

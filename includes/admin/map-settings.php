@@ -17,10 +17,8 @@ function xyz_map_admin_page() {
         $map_id = intval($_POST['map_id']);
         $tiles_input = isset($_POST['tiles_url']) ? wp_unslash($_POST['tiles_url']) : '';
         $tiles_input = trim($tiles_input);
-        // przywróć klamry, jeśli przeglądarka/serwer je zakodował
         $tiles_input = str_replace(['%7B','%7D'], ['{','}'], $tiles_input);
 
-        // opcjonalnie: bardzo lekka walidacja (musi być http/https)
         if (!preg_match('#^https?://#i', $tiles_input)) {
             $tiles_input = '';
         }

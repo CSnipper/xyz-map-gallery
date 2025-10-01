@@ -1,0 +1,101 @@
+msgid "Rate limited"
+msgstr "Rate limited"
+
+msgid "Map not found."
+msgstr "Map not found."
+
+msgid "No photos yet."
+msgstr "No photos yet."
+
+msgid "XYZ Big Map"
+msgstr "XYZ Big Map"
+
+msgid "Content"
+msgstr "Content"
+
+msgid "Map"
+msgstr "Map"
+
+msgid "Start typing to filter the list."
+msgstr "Start typing to filter the list."
+
+msgid "No maps found. Create one first."
+msgstr "No maps found. Create one first."
+
+msgid "Pick a map in the sidebar."
+msgstr "Pick a map in the sidebar."
+
+msgid "XYZ Map Gallery"
+msgstr "XYZ Map Gallery"
+
+msgid "Type map title to search…"
+msgstr "Type map title to search…"
+
+msgid "XYZ Mini Map"
+msgstr "XYZ Mini Map"
+
+msgid "Place"
+msgstr "Place"
+
+msgid "Type place title to search…"
+msgstr "Type place title to search…"
+
+msgid "XYZ Photos Grid"
+msgstr "XYZ Photos Grid"
+
+msgid "Per page"
+msgstr "Per page"
+
+msgid "Back to map"
+msgstr "Back to map"
+
+msgid "Unsupported file"
+msgstr "Unsupported file"
+
+msgid "Upload file"
+msgstr "Upload file"
+
+msgid "Assign to map"
+msgstr "Assign to map"
+
+msgid "— none —"
+msgstr "— none —"
+
+msgid "Column mapping"
+msgstr "Column mapping"
+
+msgid "Title"
+msgstr "Title"
+
+msgid "Description"
+msgstr "Description"
+
+msgid "Owner"
+msgstr "Owner"
+
+msgid "Tags"
+msgstr "Tags"
+
+msgid "Icon"
+msgstr "Icon"
+
+msgid "External ID"
+msgstr "External ID"
+
+msgid "Latitude"
+msgstr "Latitude"
+
+msgid "Longitude"
+msgstr "Longitude"
+
+msgid "Options"
+msgstr "Options"
+
+msgid "Dry-run"
+msgstr "Dry-run"
+
+msgid "Overwrite existing"
+msgstr "Overwrite existing"
+
+msgid "Run import"
+msgstr "Run import"

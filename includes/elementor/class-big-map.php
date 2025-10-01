@@ -13,7 +13,6 @@ class XYZ_Widget_Big_Map extends \Elementor\Widget_Base {
     protected function register_controls(){
       $this->start_controls_section('content', ['label'=>__('Content','xyz-map-gallery')]);
 
-      // Zbierz mapy z bazy
       global $wpdb;
       $tbl = $wpdb->prefix . 'xyz_maps';
       $rows = $wpdb->get_results("SELECT id, name FROM {$tbl} ORDER BY name ASC");
@@ -24,7 +23,6 @@ class XYZ_Widget_Big_Map extends \Elementor\Widget_Base {
         }
       }
 
-  // ...existing code...
       $this->add_control('map_id', [
         'label'        => __('Map','xyz-map-gallery'),
         'type'         => \Elementor\Controls_Manager::SELECT2,
@@ -49,7 +47,6 @@ class XYZ_Widget_Big_Map extends \Elementor\Widget_Base {
         return;
       }
 
-      // zasoby – zawsze (Elementor nie przechodzi przez the_content)
       wp_enqueue_style('leaflet-css','https://unpkg.com/leaflet@1.9.4/dist/leaflet.css',[], '1.9.4');
       wp_enqueue_style('leaflet-markercluster-css','https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css',['leaflet-css'],'1.5.3');
       wp_enqueue_style('leaflet-markercluster-default-css','https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css',['leaflet-markercluster-css'],'1.5.3');
@@ -59,7 +56,6 @@ class XYZ_Widget_Big_Map extends \Elementor\Widget_Base {
       wp_enqueue_script('leaflet-markercluster-js','https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js',['leaflet-js'],'1.5.3', true);
       wp_enqueue_script('xyz-frontend-js', plugins_url('assets/js/frontend-map.js', XYZ_MAP_GALLERY_FILE), ['leaflet-js','leaflet-markercluster-js'], '1.0.1', true);
 
-  // ...existing code...
       echo xyz_render_big_map($map_id);
     }
 

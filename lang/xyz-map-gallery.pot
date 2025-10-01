@@ -1,0 +1,151 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: XYZ Map Gallery\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-10-01 12:00+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: \n"
+"Language: \n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: AI\n"
+"X-Domain: xyz-map-gallery"
+
+#: includes/rest.php
+msgid "Rate limited"
+msgstr ""
+
+#: includes/frontend/renderers.php
+msgid "Map not found."
+msgstr ""
+
+#: includes/frontend/renderers.php
+msgid "No photos yet."
+msgstr ""
+
+#: includes/elementor/class-big-map.php
+msgid "XYZ Big Map"
+msgstr ""
+
+#: includes/elementor/class-big-map.php
+msgid "Content"
+msgstr ""
+
+#: includes/elementor/class-big-map.php
+msgid "Map"
+msgstr ""
+
+#: includes/elementor/class-big-map.php
+msgid "Start typing to filter the list."
+msgstr ""
+
+#: includes/elementor/class-big-map.php
+msgid "No maps found. Create one first."
+msgstr ""
+
+#: includes/elementor/class-big-map.php
+msgid "Pick a map in the sidebar."
+msgstr ""
+
+#: includes/integrations/wpbakery.php
+msgid "XYZ Map Gallery"
+msgstr ""
+
+#: includes/integrations/wpbakery.php
+msgid "Type map title to search…"
+msgstr ""
+
+#: includes/integrations/wpbakery.php
+msgid "XYZ Mini Map"
+msgstr ""
+
+#: includes/integrations/wpbakery.php
+msgid "Place"
+msgstr ""
+
+#: includes/integrations/wpbakery.php
+msgid "Type place title to search…"
+msgstr ""
+
+#: includes/integrations/wpbakery.php
+msgid "XYZ Photos Grid"
+msgstr ""
+
+#: includes/integrations/wpbakery.php
+msgid "Per page"
+msgstr ""
+
+#: includes/frontend/shortcodes.php
+msgid "Back to map"
+msgstr ""
+
+#: includes/import/step-upload.php
+msgid "Unsupported file"
+msgstr ""
+
+#: includes/import/step-upload.php
+msgid "Upload file"
+msgstr ""
+
+#: includes/import/step-mapping.php
+msgid "Assign to map"
+msgstr ""
+
+#: includes/import/step-mapping.php
+msgid "— none —"
+msgstr ""
+
+#: includes/import/step-mapping.php
+msgid "Column mapping"
+msgstr ""
+
+#: includes/import/step-mapping.php
+msgid "Title"
+msgstr ""
+
+#: includes/import/step-mapping.php
+msgid "Description"
+msgstr ""
+
+#: includes/import/step-mapping.php
+msgid "Owner"
+msgstr ""
+
+#: includes/import/step-mapping.php
+msgid "Tags"
+msgstr ""
+
+#: includes/import/step-mapping.php
+msgid "Icon"
+msgstr ""
+
+#: includes/import/step-mapping.php
+msgid "External ID"
+msgstr ""
+
+#: includes/import/step-mapping.php
+msgid "Latitude"
+msgstr ""
+
+#: includes/import/step-mapping.php
+msgid "Longitude"
+msgstr ""
+
+#: includes/import/step-mapping.php
+msgid "Options"
+msgstr ""
+
+#: includes/import/step-mapping.php
+msgid "Dry-run"
+msgstr ""
+
+#: includes/import/step-mapping.php
+msgid "Overwrite existing"
+msgstr ""
+
+#: includes/import/step-mapping.php
+msgid "Run import"
+msgstr ""
