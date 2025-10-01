@@ -27,7 +27,7 @@ jobs:
             --exclude='tests' \
             --exclude='*.yml' \
             --exclude='README-en.md' \ 
-            --exclude='README-pl.md'\ 
+            --exclude='README-pl.md' \ 
             --exclude='smartftp.json' \
             --exclude='.gitattributes' \ 
             --exclude='.gitignore' \
