@@ -5,35 +5,34 @@ on:
     tags:
       - 'v*'
 
-on:
-  push:
-    tags:
-      - '*'
-
 jobs:
-  deploy:
+  build-release:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repo
-        uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '7.4'
+
+      - name: PHP lint
+        run: |
+          find . -type f -name "*.php" -exec php -l {} \;
 
       - name: Prepare plugin folder
         run: |
-          SLUG=xyz-map-gallery
-          mkdir $SLUG
-          rsync -av \
-            --exclude='.git*' \
-            --exclude='.github' \
-            --exclude='tests' \
-            --exclude='*.yml' \
-            --exclude='README-en.md' \ 
-            --exclude='README-pl.md' \ 
-            --exclude='smartftp.json' \
-            --exclude='.gitattributes' \ 
-            --exclude='.gitignore' \
-            ./ $SLUG/
+          mkdir xyz-map-gallery
+          rsync -av --exclude='.git*' --exclude='.github*' --exclude='README-en.md' --exclude='README-pl.md' --exclude='smartftp.json' --exclude='.gitattributes' --exclude='.gitignore' ./ xyz-map-gallery/
 
-      - name: Zip it
+      - name: Create plugin zip
         run: |
-          SLUG=xyz-map-gallery
-          zip -r $SLUG.zip $SLUG
+          zip -r xyz-map-gallery.zip xyz-map-gallery
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: xyz-map-gallery.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
