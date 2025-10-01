@@ -5,30 +5,35 @@ on:
     tags:
       - 'v*'
 
+on:
+  push:
+    tags:
+      - '*'
+
 jobs:
-  build-release:
+  deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+      - name: Checkout repo
+        uses: actions/checkout@v4
 
-      - name: Set up PHP
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: '7.4'
-
-      - name: PHP lint
+      - name: Prepare plugin folder
         run: |
-          find . -type f -name "*.php" -exec php -l {} \;
+          SLUG=xyz-map-gallery
+          mkdir $SLUG
+          rsync -av \
+            --exclude='.git*' \
+            --exclude='.github' \
+            --exclude='tests' \
+            --exclude='*.yml' \
+            --exclude='README-en.md' \ 
+            --exclude='README-pl.md'\ 
+            --exclude='smartftp.json' \
+            --exclude='.gitattributes' \ 
+            --exclude='.gitignore' \
+            ./ $SLUG/
 
-      - name: Prepare plugin zip
+      - name: Zip it
         run: |
-          EXCLUDES=(--exclude='.git*' --exclude='.github*' --exclude='README-en.md' --exclude='README-pl.md' --exclude='smartftp.json' --exclude='.gitattributes' --exclude='.gitignore')
-          zip -r xyz-map-gallery.zip . "${EXCLUDES[@]}"
-
-      - name: Create GitHub Release
-        uses: softprops/action-gh-release@v1
-        with:
-          files: xyz-map-gallery.zip
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SLUG=xyz-map-gallery
+          zip -r $SLUG.zip $SLUG
