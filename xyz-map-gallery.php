@@ -11,6 +11,8 @@ License URI: https://www.gnu.org/licenses/gpl-2.0.html
 */
 if (!defined('ABSPATH')) exit;
 
+// Load translations early so plugin name / menu labels are available immediately
+load_plugin_textdomain('xyz-map-gallery', false, dirname(plugin_basename(__FILE__)).'/lang/');
 
 define('XYZ_MG_FILE', __FILE__);
 define('XYZ_MAP_GALLERY_FILE', __FILE__);

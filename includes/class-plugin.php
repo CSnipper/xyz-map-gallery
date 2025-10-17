@@ -5,7 +5,8 @@ if (!defined('ABSPATH')) exit;
 
 class Plugin {
     public function __construct() {
-      add_action('init',               [$this,'load_textdomain']);
+      // Ensure translations are available early in the WP lifecycle
+      add_action('plugins_loaded',     [$this,'load_textdomain']);
       add_action('admin_menu',         [$this,'admin_menu']);
       add_action('admin_init',         [$this,'register_settings']);
 
