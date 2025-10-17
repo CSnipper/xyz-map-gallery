@@ -5,7 +5,9 @@ Description: A plugin to create and manage interactive maps with markers based o
 Version: 1.0
 Author: Marek Wojtaszek
 Text Domain: xyz-map-gallery
-Domain Path: /languages
+Domain Path: /lang
+License: GPLv2 or later
+License URI: https://www.gnu.org/licenses/gpl-2.0.html
 */
 if (!defined('ABSPATH')) exit;
 
@@ -13,6 +15,12 @@ if (!defined('ABSPATH')) exit;
 define('XYZ_MG_FILE', __FILE__);
 define('XYZ_MAP_GALLERY_FILE', __FILE__);
 define('XYZ_MAP_GALLERY_URL', plugin_dir_url(__FILE__));
+
+add_action('wp_enqueue_scripts', function () {
+    // Załaduj jQuery z pakietu WP
+    wp_enqueue_script('jquery');
+ 
+});
 
 add_action('plugins_loaded', function () {
     if ( is_admin() ) {

@@ -16,7 +16,7 @@ public function get_categories(){ return ['xyz-map-gallery']; }
 
       $opts = [];
       $posts = get_posts([
-        'post_type'      => 'gallery_item',
+        'post_type'      => 'map_marker',
         'post_status'    => 'publish',
         'posts_per_page' => 500,
         'orderby'        => 'title',

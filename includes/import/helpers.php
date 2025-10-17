@@ -13,11 +13,11 @@ function xyz_import_upsert_marker($in,$opts){
 
     $existing_id=0;
     if($ext_id!==''){
-        $q=get_posts(['post_type'=>'gallery_item','meta_key'=>'_ext_id','meta_value'=>$ext_id,'fields'=>'ids','posts_per_page'=>1]);
+        $q=get_posts(['post_type'=>'map_marker','meta_key'=>'_ext_id','meta_value'=>$ext_id,'fields'=>'ids','posts_per_page'=>1]);
         if($q) $existing_id=(int)$q[0];
     }
 
-    $postarr=['post_title'=>$title,'post_content'=>$desc,'post_status'=>'publish','post_type'=>'gallery_item'];
+    $postarr=['post_title'=>$title,'post_content'=>$desc,'post_status'=>'publish','post_type'=>'map_marker'];
 
     if($existing_id && !$overwrite) return ['action'=>'skipped','message'=>"Skipped $title"];
 

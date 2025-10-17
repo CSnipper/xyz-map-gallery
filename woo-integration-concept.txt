@@ -1,0 +1,57 @@
+Koncepcja integracji photo_items z WooCommerce w pluginie XYZ Map Gallery
+
+1. Powiązanie photo_items z produktami WooCommerce
+--------------------------------------------------
+Każde zdjęcie (map_photo) może być powiązane z produktem WooCommerce (np. do sprzedaży wydruków, plików cyfrowych, itp.).
+
+A. Opcja "Utwórz również produkt" przy dodawaniu nowego map_photo
+- W edytorze map_photo (np. w metaboxie lub panelu) dodaj checkbox: "Utwórz również produkt WooCommerce".
+- Po zapisaniu map_photo:
+  - Jeśli zaznaczono opcję, automatycznie utwórz nowy produkt WooCommerce (post typu product).
+  - Powiąż produkt z map_photo (np. przez custom field: _woo_product_id).
+  - Skopiuj dane (tytuł, opis, obrazek) do produktu Woo.
+  - Opcjonalnie: ustaw cenę, typ produktu, dostępność, itp.
+
+B. Opcja wsadowego tworzenia produktów dla istniejących photo_items
+- Dodaj stronę narzędziową w panelu admina: "Utwórz produkty Woo dla zdjęć".
+- Wyświetl listę photo_items bez powiązanego produktu.
+- Pozwól zaznaczyć wybrane zdjęcia i utworzyć dla nich produkty Woo hurtowo.
+- Dla każdego utworzonego produktu zapisz powiązanie w map_photo.
+
+C. Powiązanie wariacji produktu (opcjonalnie)
+- Przy tworzeniu produktu dodaj opcję wyboru wariacji (np. format, rozmiar, typ wydruku).
+- Można wykorzystać WooCommerce Product Variations (np. atrybuty: format, rozmiar).
+- W panelu map_photo dodaj formularz do określenia wariacji (np. lista formatów, rozmiarów).
+- Przy wsadowym tworzeniu produktów można ustawić domyślne wariacje.
+
+2. Sprzedaż zdjęć w różnych formatach/rozmiarach
+-------------------------------------------------
+- Każdy produkt WooCommerce powiązany z map_photo może mieć wariacje (np. format, rozmiar, typ pliku).
+- Wariacje można ustawić automatycznie lub ręcznie przy tworzeniu produktu.
+- Część zdjęć może nie mieć produktu Woo (np. tylko do podglądu).
+
+3. Realizacja techniczna
+------------------------
+- Custom field w map_photo: _woo_product_id (ID produktu WooCommerce).
+- Tworzenie produktu Woo: wp_insert_post(['post_type'=>'product', ...]) + ustawienie meta (cena, obrazek, atrybuty).
+- Tworzenie wariacji: WooCommerce REST API lub programowo przez WP (post typu product_variation).
+- Panel wsadowy: Strona admina z listą photo_items, akcja masowa.
+- Wyświetlanie powiązania: W edycji map_photo pokazuj link do produktu Woo, status powiązania.
+
+4. Przykładowy workflow
+-----------------------
+1. Dodajesz nowe zdjęcie (map_photo).
+2. Zaznaczasz "Utwórz również produkt Woo".
+3. Po zapisaniu powstaje produkt Woo, powiązany ze zdjęciem.
+4. W edycji zdjęcia widzisz link do produktu Woo, możesz edytować wariacje.
+5. W narzędziu wsadowym możesz utworzyć produkty dla wielu zdjęć naraz.
+
+5. Co trzeba zaimplementować
+----------------------------
+- Metabox/checkbox w edycji map_photo.
+- Funkcję tworzącą produkt Woo przy zapisie map_photo.
+- Custom field _woo_product_id w map_photo.
+- Panel wsadowy do masowego tworzenia produktów.
+- Obsługę wariacji (opcjonalnie).
+- Synchronizację danych (tytuł, opis, obrazek).
+- Wyświetlanie powiązania w panelu admina.

@@ -2,9 +2,9 @@
 if (!defined('ABSPATH')) exit;
 
 add_action('wp_head', function(){
-  if (is_singular('gallery_item')) {
+  if (is_singular('map_marker')) {
     $url = get_permalink(); 
-  } elseif (is_singular('photo_item')) {
+  } elseif (is_singular('map_photo')) {
   $url = get_permalink(); 
   } else {
     return;
@@ -15,8 +15,8 @@ add_action('wp_head', function(){
 add_action('wp_head', function(){
   if (is_admin()) return;
 
-  // Place (gallery_item)
-  if (is_singular('gallery_item')) {
+  // Place (map_marker)
+  if (is_singular('map_marker')) {
     $id   = get_the_ID();
     $pos  = trim((string) get_post_meta($id,'_map_position',true));
     $img  = get_the_post_thumbnail_url($id, 'large');
@@ -41,8 +41,8 @@ add_action('wp_head', function(){
     return;
   }
 
-  // ImageObject (photo_item)
-  if (is_singular('photo_item')) {
+  // ImageObject (map_photo)
+  if (is_singular('map_photo')) {
     $id   = get_the_ID();
     $img  = wp_get_attachment_image_src( get_post_thumbnail_id($id), 'full' );
     if (!$img) return;

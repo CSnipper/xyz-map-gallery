@@ -36,12 +36,14 @@ function xyz_map_admin_page() {
               'image_height' => isset($_POST['image_height']) ? sanitize_text_field($_POST['image_height']) : '',
               'zoom_min'     => isset($_POST['zoom_min']) ? absint($_POST['zoom_min']) : 0,
               'zoom_max'     => isset($_POST['zoom_max']) ? absint($_POST['zoom_max']) : 18,
-              'bounds'       => wp_json_encode([
+                  'bounds'       => wp_json_encode([
                                   'lat1' => isset($_POST['lat1']) ? (float) $_POST['lat1'] : null,
                                   'lng1' => isset($_POST['lng1']) ? (float) $_POST['lng1'] : null,
                                   'lat2' => isset($_POST['lat2']) ? (float) $_POST['lat2'] : null,
                                   'lng2' => isset($_POST['lng2']) ? (float) $_POST['lng2'] : null,
                                ]),
+                  'center_lat'   => isset($_POST['center_lat']) && $_POST['center_lat'] !== '' ? (float) $_POST['center_lat'] : null,
+                  'center_lng'   => isset($_POST['center_lng']) && $_POST['center_lng'] !== '' ? (float) $_POST['center_lng'] : null,
               'cluster_markers' => isset($_POST['cluster_markers']) ? 1 : 0,
             ];
               $result = $wpdb->update($table_name, $map_data, ['id' => $map_id]);
@@ -63,12 +65,14 @@ function xyz_map_admin_page() {
                   'image_height' => isset($_POST['image_height']) ? sanitize_text_field($_POST['image_height']) : '',
                   'zoom_min'     => isset($_POST['zoom_min']) ? absint($_POST['zoom_min']) : 0,
                   'zoom_max'     => isset($_POST['zoom_max']) ? absint($_POST['zoom_max']) : 18,
-                  'bounds'       => wp_json_encode([
+                        'bounds'       => wp_json_encode([
                                       'lat1' => isset($_POST['lat1']) ? (float) $_POST['lat1'] : null,
                                       'lng1' => isset($_POST['lng1']) ? (float) $_POST['lng1'] : null,
                                       'lat2' => isset($_POST['lat2']) ? (float) $_POST['lat2'] : null,
                                       'lng2' => isset($_POST['lng2']) ? (float) $_POST['lng2'] : null,
                                    ]),
+                        'center_lat'   => isset($_POST['center_lat']) && $_POST['center_lat'] !== '' ? (float) $_POST['center_lat'] : null,
+                        'center_lng'   => isset($_POST['center_lng']) && $_POST['center_lng'] !== '' ? (float) $_POST['center_lng'] : null,
                   'cluster_markers' => isset($_POST['cluster_markers']) ? 1 : 0,
                 ];
                 $result = $wpdb->insert($table_name, $map_data);
@@ -90,9 +94,11 @@ function xyz_map_admin_page() {
     <div class="wrap">
         <?php if ($edit_map) : ?>
             <h1><?php _e('Edit Map', 'xyz-map-gallery'); ?></h1>
-            <form method="post" action="">
-                <?php wp_nonce_field('xyz_map_nonce'); ?>
-                <table class="form-table">
+                        <form method="post" action="">
+                                <?php wp_nonce_field('xyz_map_nonce'); ?>
+                                <div class="xyz-admin-flex-row">
+                                    <div class="xyz-admin-maincol">
+                                        <table class="form-table">
                     <tr>
                         <th><label for="map_name"><?php _e('Map Name', 'xyz-map-gallery'); ?> <span style="color: red;">*</span></label></th>
                         <td><input type="text" name="map_name" id="map_name" value="<?php echo esc_attr($edit_map->name); ?>" required></td>
@@ -142,6 +148,7 @@ function xyz_map_admin_page() {
                             </table>
                         </td>
                     </tr>
+                    <!-- Map Center moved to right column aside -->
                     <tr>
                         <th><label for="zoom_min"><?php _e('Min Zoom', 'xyz-map-gallery'); ?> <span style="color: red;">*</span></label></th>
                         <td><input type="text" name="zoom_min" id="zoom_min" value="<?php echo esc_attr($edit_map->zoom_min); ?>" required></td>
@@ -154,8 +161,19 @@ function xyz_map_admin_page() {
                         <th><label for="cluster_markers"><?php _e('Cluster Markers', 'xyz-map-gallery'); ?></label></th>
                         <td><input type="checkbox" name="cluster_markers" id="cluster_markers" value="1" <?php checked($edit_map->cluster_markers, 1); ?>></td>
                     </tr>
-                </table>
-                <input type="hidden" name="map_id" value="<?php echo $edit_map->id; ?>">
+                                        </table>
+                                    </div>
+                                    <aside class="xyz-admin-aside">
+                                        <?php $center_lat = isset($edit_map->center_lat) ? $edit_map->center_lat : ''; $center_lng = isset($edit_map->center_lng) ? $edit_map->center_lng : ''; ?>
+                                        <input type="hidden" name="center_lat" id="center_lat" value="<?php echo esc_attr($center_lat); ?>">
+                                        <input type="hidden" name="center_lng" id="center_lng" value="<?php echo esc_attr($center_lng); ?>">
+                                        <div id="xyz-center-picker" style="height:220px;border:1px solid #ddd;border-radius:6px;overflow:hidden;margin-top:6px;"> </div>
+                                        <div id="xyz-center-debug" style="font-size:12px;margin-top:6px;color:#444;">Żądany tile: <span id="xyz-debug-url">(brak)</span></div>
+                                        <p class="description"><?php _e('Click on the map to set the center point that the big map will use when loaded. Click Reset to clear.', 'xyz-map-gallery'); ?></p>
+                                        <p><button type="button" class="button" id="xyz-center-reset"><?php _e('Reset Center', 'xyz-map-gallery'); ?></button></p>
+                                    </aside>
+                                </div>
+                                <input type="hidden" name="map_id" value="<?php echo $edit_map->id; ?>">
                 <p><input type="submit" name="xyz_map_submit" class="button-primary" value="<?php _e('Save Map', 'xyz-map-gallery'); ?>"></p>
                 <script type="text/javascript">
                     function toggleMapFields(mode) {
@@ -177,12 +195,15 @@ function xyz_map_admin_page() {
                         toggleMapFields(select.value);
                     });
                 </script>
+                <!-- center picker initialization moved to enqueued assets/js/admin-center.js -->
             </form>
         <?php elseif (isset($_GET['add_new'])) : ?>
             <h1><?php _e('Add New Map', 'xyz-map-gallery'); ?></h1>
-            <form method="post" action="">
-                <?php wp_nonce_field('xyz_map_nonce'); ?>
-                <table class="form-table">
+                        <form method="post" action="">
+                                <?php wp_nonce_field('xyz_map_nonce'); ?>
+                                <div style="display:flex;gap:22px;align-items:flex-start;">
+                                    <div style="flex:1;min-width:0;">
+                                        <table class="form-table">
                     <tr>
                         <th><label for="map_name"><?php _e('Map Name', 'xyz-map-gallery'); ?> <span style="color: red;">*</span></label></th>
                         <td><input type="text" name="map_name" id="map_name" value="" required></td>
@@ -243,8 +264,18 @@ function xyz_map_admin_page() {
                         <th><label for="cluster_markers"><?php _e('Cluster Markers', 'xyz-map-gallery'); ?></label></th>
                         <td><input type="checkbox" name="cluster_markers" id="cluster_markers" value="1"></td>
                     </tr>
-                </table>
-                <p><input type="submit" name="xyz_map_submit" class="button-primary" value="<?php _e('Save Map', 'xyz-map-gallery'); ?>"></p>
+                                        </table>
+                                    </div>
+                                    <aside style="width:360px;flex:0 0 360px;">
+                                        <input type="hidden" name="center_lat" id="center_lat" value="">
+                                        <input type="hidden" name="center_lng" id="center_lng" value="">
+                                        <div id="xyz-center-picker" style="height:220px;border:1px solid #ddd;border-radius:6px;overflow:hidden;margin-top:6px;"> </div>
+                                        <div id="xyz-center-debug" style="font-size:12px;margin-top:6px;color:#444;">Żądany tile: <span id="xyz-debug-url">(brak)</span></div>
+                                        <p class="description"><?php _e('Click on the map to set the center point that the big map will use when loaded. Click Reset to clear.', 'xyz-map-gallery'); ?></p>
+                                        <p><button type="button" class="button" id="xyz-center-reset"><?php _e('Reset Center', 'xyz-map-gallery'); ?></button></p>
+                                    </aside>
+                                </div>
+                                <p><input type="submit" name="xyz_map_submit" class="button-primary" value="<?php _e('Save Map', 'xyz-map-gallery'); ?>"></p>
                 <script type="text/javascript">
                     function toggleMapFields(mode) {
                         var imageFields = document.getElementById('image-size-fields');

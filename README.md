@@ -45,3 +45,27 @@ GPL v2 or later
 ---
 For more information, see the documentation or contact the author.
 
+
+## Recent admin improvements (initial release)
+
+This initial release includes a set of admin-side improvements focused on reliability and maintainability:
+
+- Persistent center picker in Map settings (admin): pick a center point on a mini-map; saved coordinates are included in the map payload used by frontend maps.
+- All admin JavaScript previously embedded inline has been moved to enqueued assets for predictable load order and to avoid race conditions with Leaflet being loaded in the footer.
+- Responsive admin CSS so the center picker appears in a right-hand aside on desktop and stacks above the form on narrow screens.
+- Bulk assign UI helper (map selector next to Bulk actions) is now provided by `assets/js/admin-bulk.js` and localized via `includes/admin/assets.php`.
+
+Files changed/added (high level):
+- `includes/admin/map-settings.php` — removed inline initialization and added layout classes.
+- `includes/admin/assets.php` — enqueued CSS/JS and localized small data objects for admin scripts.
+- `assets/css/admin-center.css` — responsive styling for the admin UI.
+- `assets/js/admin-center.js` — central admin init for the center picker (already present).
+- `assets/js/admin-bulk.js` — new file for Bulk-assign UI behaviour.
+
+QA quick checks:
+- Admin → Maps → Edit map: mini-map appears, click to set marker, Save Map. Values persist.
+- Admin → Markers list: select multiple items, choose Bulk action "Assign to map…" — selecting no map triggers an alert; selecting a map applies the action.
+
+Release notes:
+- This is the plugin's first release. No automatic DB migrations are included; the initial install contains the necessary schema.
+

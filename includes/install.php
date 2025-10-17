@@ -15,6 +15,8 @@ class Install {
       `tiles_url` TEXT NOT NULL,
       `image_width` VARCHAR(50) NOT NULL DEFAULT '0',
       `image_height` VARCHAR(50) NOT NULL DEFAULT '0',
+      `center_lat` DOUBLE DEFAULT NULL,
+      `center_lng` DOUBLE DEFAULT NULL,
       `zoom_min` TINYINT UNSIGNED NOT NULL DEFAULT 0,
       `zoom_max` TINYINT UNSIGNED NOT NULL DEFAULT 18,
       `bounds` LONGTEXT NOT NULL,

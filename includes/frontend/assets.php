@@ -16,7 +16,7 @@ function xyz_enqueue_mini_map_assets() {
 }
 
 add_action('wp_enqueue_scripts', function () {
-  if ( is_singular('gallery_item') || is_singular('photo_item') ) {
+  if ( is_singular('map_marker') || is_singular('map_photo') ) {
     xyz_enqueue_mini_map_assets();
   }
 });

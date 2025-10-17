@@ -18,20 +18,20 @@ function xyz_invalidate_map_cache($map_id){
 // bump after marker changes
 add_action('save_post_gallery_item', function($post_id,$post){
   if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) return;
-  if ($post->post_type!=='gallery_item') return;
+  if ($post->post_type!=='map_marker') return;
   $map_id = (int) get_post_meta($post_id,'_map_id',true);
   if ($map_id) xyz_bump_cache_ver($map_id);
 },10,2);
 
 add_action('deleted_post', function($post_id){
   $post = get_post($post_id);
-  if (!$post || $post->post_type!=='gallery_item') return;
+  if (!$post || $post->post_type!=='map_marker') return;
   $map_id = (int) get_post_meta($post_id,'_map_id',true);
   if ($map_id) xyz_bump_cache_ver($map_id);
 },10,1);
 
 add_action('set_object_terms', function($post_id,$terms,$tt_ids,$taxonomy){
-  if (get_post_type($post_id)!=='gallery_item') return;
+  if (get_post_type($post_id)!=='map_marker') return;
   if (!in_array($taxonomy, ['post_tag','owner'], true)) return;
   $map_id = (int) get_post_meta($post_id,'_map_id',true);
   if ($map_id) xyz_bump_cache_ver($map_id);

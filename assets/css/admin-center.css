@@ -1,0 +1,14 @@
+/* Responsive layout for admin map settings center picker */
+.xyz-admin-flex-row{display:flex;gap:22px;align-items:flex-start;}
+.xyz-admin-maincol{flex:1;min-width:0}
+.xyz-admin-aside{width:360px;flex:0 0 360px}
+
+/* On narrow screens, stack the aside above the main column */
+@media (max-width:860px){
+  .xyz-admin-flex-row{display:block}
+  .xyz-admin-aside{width:100%;flex:0 0 auto;margin-bottom:12px}
+}
+
+/* Make the picker full width in the aside */
+.xyz-admin-aside #xyz-center-picker{width:100%;height:220px;border:1px solid #ddd;border-radius:6px;overflow:hidden}
+.xyz-admin-aside #xyz-center-debug{font-size:12px;margin-top:6px;color:#444}

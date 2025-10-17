@@ -12,7 +12,7 @@ function xyz_get_map_page_url_for_place($place_id){
 
 function xyz_render_breadcrumbs(){
   if (is_admin()) return '';
-  if (is_singular('gallery_item')) {
+  if (is_singular('map_marker')) {
     $place_id = get_the_ID();
     $map_url  = xyz_get_map_page_url_for_place($place_id);
     return '<nav class="xyz-bc" aria-label="Breadcrumbs">'
@@ -20,7 +20,7 @@ function xyz_render_breadcrumbs(){
          . ' &raquo; <span>'.esc_html(get_the_title()).'</span>'
          . '</nav>';
   }
-  if (is_singular('photo_item')) {
+  if (is_singular('map_photo')) {
     $photo_id = get_the_ID();
     $place_id = (int) get_post_meta($photo_id,'_place_id',true);
     if ($place_id) {
@@ -38,7 +38,7 @@ function xyz_render_breadcrumbs(){
 
 // Wstrzyknięcie nad treścią pojedynczych wpisów
 add_filter('the_content', function($c){
-  if (is_singular(['gallery_item','photo_item'])) {
+  if (is_singular(['map_marker','map_photo'])) {
     return xyz_render_breadcrumbs() . $c;
   }
   return $c;

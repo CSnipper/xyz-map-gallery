@@ -79,7 +79,10 @@ jQuery(document).ready(function ($) {
       }).addTo(map);
     }
 
-    if (
+    // If the server provided an explicit center, use it (admin-picked)
+    if (Array.isArray(data.center) && data.center.length === 2 && !isNaN(data.center[0]) && !isNaN(data.center[1])) {
+      map.setView([parseFloat(data.center[0]), parseFloat(data.center[1])], data.zoomLevels && data.zoomLevels.min ? data.zoomLevels.min : 15);
+    } else if (
       data.mapMode === 'geo' &&
       Array.isArray(data.bounds) &&
       data.bounds.length === 2 &&
@@ -115,9 +118,21 @@ jQuery(document).ready(function ($) {
       var latlng = data.mapMode === 'geo' ? [markerData.lat, markerData.lng] : [markerData.y, markerData.x];
       if (isNaN(latlng[0]) || isNaN(latlng[1])) return null;
 
-      var icon = markerData.iconUrl
-        ? L.icon({ iconUrl: markerData.iconUrl, iconSize:[32,32], iconAnchor:[16,32], popupAnchor:[0,-32] })
-        : new L.Icon.Default();
+      // encode spaces and other unsafe chars in icon URLs to avoid 404s for filenames with spaces
+      var icon = null;
+      if (markerData.iconUrl) {
+        try {
+          // Only encode the path part to preserve protocol and host
+          var u = new URL(markerData.iconUrl, window.location.origin);
+          u.pathname = u.pathname.split('/').map(function(p){ return encodeURIComponent(decodeURIComponent(p)); }).join('/');
+          icon = L.icon({ iconUrl: u.toString(), iconSize:[32,32], iconAnchor:[16,32], popupAnchor:[0,-32] });
+        } catch (e) {
+          // fallback: try simple encodeURI
+          icon = L.icon({ iconUrl: encodeURI(markerData.iconUrl), iconSize:[32,32], iconAnchor:[16,32], popupAnchor:[0,-32] });
+        }
+      } else {
+        icon = new L.Icon.Default();
+      }
 
       var lm = L.marker(latlng, { icon: icon })
         .bindPopup(buildPopupHTML(markerData), { maxWidth: 240, autoPan: true, className: 'xyz-popup' });
@@ -141,6 +156,63 @@ jQuery(document).ready(function ($) {
       idx = all.map(function(m,i){
         return { i:i, t:norm(m.title), k:norm(m.keywords || '') };
       });
+    }
+
+    // Add or update markers returned from bbox AJAX calls
+    function addOrUpdateMarkers(newMarkers){
+      if (!Array.isArray(newMarkers) || !newMarkers.length) return;
+      var added = false;
+      var updated = false; // track when existing marker data changed so we can rebuild the search index
+      newMarkers.forEach(function(m){
+        if (!m || !m.id) return;
+        var sid = String(m.id);
+        // find existing
+        var existingIdx = -1;
+        for (var j=0;j<all.length;j++){ if (String(all[j].id) === sid) { existingIdx = j; break; } }
+
+        if (existingIdx !== -1) {
+          // update existing marker data
+          var existing = all[existingIdx];
+          // copy fields; detect if anything changed worth rebuilding index
+          for (var k in m) if (m.hasOwnProperty(k)) {
+            try {
+              if (existing[k] !== m[k]) updated = true;
+            } catch (e) { /* ignore comparison errors */ }
+            existing[k] = m[k];
+          }
+
+          // update leaflet marker if present
+          if (existing._lm) {
+            try {
+              var latlng = data.mapMode === 'geo' ? [existing.lat, existing.lng] : [existing.y, existing.x];
+              if (!isNaN(latlng[0]) && !isNaN(latlng[1])) existing._lm.setLatLng(latlng);
+              existing._lm.setPopupContent(buildPopupHTML(existing));
+              if (existing.iconUrl && existing._lm.setIcon) existing._lm.setIcon(L.icon({ iconUrl: existing.iconUrl, iconSize:[32,32], iconAnchor:[16,32], popupAnchor:[0,-32] }));
+            } catch (e) { /* ignore update errors */ }
+          } else {
+            // if marker element not created yet, create it in the right layer
+            if (markersCluster && !usingPlain) addMarkerTo(markersCluster, existing);
+            else if (!usingPlain) addMarkerTo(map, existing);
+            else addMarkerTo(plainLayer, existing);
+          }
+        } else {
+          // new marker -> append and create marker
+          all.push(m);
+          loadedIds.add(sid);
+          if (markersCluster && !usingPlain) {
+            addMarkerTo(markersCluster, m);
+            if (!map.hasLayer(markersCluster)) map.addLayer(markersCluster);
+          } else if (!usingPlain) {
+            addMarkerTo(map, m);
+          } else {
+            addMarkerTo(plainLayer, m);
+            if (!map.hasLayer(plainLayer)) map.addLayer(plainLayer);
+          }
+          added = true;
+        }
+      });
+      // rebuild index when new markers are added OR when existing markers were updated (keywords/title changed)
+      if (added || updated) rebuildIndex();
     }
 
     // Inicjalne rozmieszczenie
@@ -194,11 +266,14 @@ jQuery(document).ready(function ($) {
     }
 
     // Dimowanie
-    function setMarkerDim(lm, dim) {
+    function setMarkerDim(lm, hide) {
       var el = lm && lm.getElement ? lm.getElement() : null;
       if (!el) return;
-      el.style.opacity = dim ? '0.25' : '1';
-      el.style.pointerEvents = dim ? 'none' : 'auto';
+      try {
+        // hide non-matches completely
+        el.style.display = hide ? 'none' : '';
+        el.style.pointerEvents = hide ? 'none' : 'auto';
+      } catch (e) { /* ignore DOM errors */ }
     }
     function dimNonMatches(matchIdxArr) {
       var set = new Set(matchIdxArr);
@@ -333,9 +408,12 @@ jQuery(document).ready(function ($) {
 
     // throttling
     var inflight = null, lastReqAt = 0;
+    // backoff state for 429 responses
+    var backoffUntil = 0, backoffDelay = 500; // ms
     function fetchBBoxMarkers(){
       var now = Date.now();
       if (inflight || (now - lastReqAt) < 250) return; // max ~4 req/s
+      if (now < backoffUntil) return; // temporary cooldown after 429
       lastReqAt = now;
 
       var params = new URLSearchParams({
@@ -346,17 +424,31 @@ jQuery(document).ready(function ($) {
         nonce:  data.bboxNonce
       });
 
-      inflight = fetch((data.ajaxUrl || window.ajaxurl || '/wp-admin/admin-ajax.php') + '?' + params.toString(), {
-        credentials: 'same-origin'
+      var url = (data.ajaxUrl || window.ajaxurl || '/wp-admin/admin-ajax.php') + '?' + params.toString();
+      inflight = fetch(url, { credentials: 'same-origin' })
+      .then(function(r){
+        if (r.status === 429) {
+          // Too Many Requests: backoff exponentially
+          backoffUntil = Date.now() + backoffDelay;
+          backoffDelay = Math.min(backoffDelay * 2, 60000); // cap to 1 minute
+          throw new Error('429');
+        }
+        // reset backoff on success or other non-429
+        backoffDelay = 500;
+        return r.json();
       })
-
-      .then(function(r){ return r.json(); })
       .then(function(json){
         if (json && json.success && Array.isArray(json.data)) {
           addOrUpdateMarkers(json.data);
         }
       })
-      .catch(function(e){ console.error('BBox load failed', e); })
+      .catch(function(e){
+        if (e && e.message === '429') {
+          console.warn('BBox loader received 429, backing off for', backoffDelay, 'ms');
+        } else {
+          console.error('BBox load failed', e);
+        }
+      })
       .finally(function(){ inflight = null; });
     }
 

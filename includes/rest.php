@@ -33,7 +33,7 @@ add_action('rest_api_init', function () {
         }
       } elseif ($type === 'place') {
         $posts = get_posts([
-          'post_type'=>'gallery_item','s'=>$q,'posts_per_page'=>20,'fields'=>'ids',
+          'post_type'=>'map_marker','s'=>$q,'posts_per_page'=>20,'fields'=>'ids',
           'post_status'=>'publish','no_found_rows'=>true,
         ]);
         foreach($posts as $pid){

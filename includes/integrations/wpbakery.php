@@ -116,12 +116,12 @@ add_filter('vc_autocomplete_xyz_map_id_render', function($term){
 
 
 /**
- * AUTOCOMPLETE: Mini Map / Photos Grid → place_id (CPT `gallery_item` po tytule)
+ * AUTOCOMPLETE: Mini Map / Photos Grid → place_id (CPT `map_marker` po tytule)
  */
 function xyz_vc_autocomplete_places_callback($query){
   $s = trim((string)$query);
   $posts = get_posts([
-    'post_type'      => 'gallery_item',
+    'post_type'      => 'map_marker',
     'post_status'    => 'publish',
     's'              => $s,
     'fields'         => 'ids',

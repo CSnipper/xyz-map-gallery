@@ -4,28 +4,9 @@ if (!defined('ABSPATH')) exit;
 if (defined('XYZ_MG_ADMIN_PHOTO_INCLUDED')) return;
 define('XYZ_MG_ADMIN_PHOTO_INCLUDED', true);
 
-/** CPT: photo_item */
-add_action('init', function () {
-    $args = [
-        'labels' => [
-            'name'          => __('Photos', 'xyz-map-gallery'),
-            'singular_name' => __('Photo', 'xyz-map-gallery'),
-        ],
-        'public'             => true,
-        'publicly_queryable' => true,
-        'has_archive'        => false,
-        'rewrite'            => ['slug' => 'foto', 'with_front' => false],
-        'supports'           => ['title', 'editor', 'thumbnail', 'comments', 'author', 'revisions'],
-        'taxonomies'         => ['category', 'post_tag'],
-        'menu_icon'          => 'dashicons-format-image',
-        'show_in_rest'       => true,
-        'show_in_menu'       => 'xyz-map-gallery', // spina pod menu wtyczki
-    ];
-    register_post_type('photo_item', $args);
-});
 
 add_filter('default_comment_status', function ($status, $post_type) {
-    return $post_type === 'photo_item' ? 'open' : $status;
+    return $post_type === 'map_photo' ? 'open' : $status;
 }, 10, 2);
 
 /** Metabox: Linked Place (autocomplete) */
@@ -34,7 +15,7 @@ function xyz_photo_register_meta_boxes() {
         'xyz_photo_place_meta',
         __('Linked Place', 'xyz-map-gallery'),
         'xyz_photo_meta_box_callback',
-        'photo_item',
+        'map_photo',
         'side',
         'default'
     );
@@ -64,7 +45,7 @@ function xyz_photo_save_post($post_id) {
     if (!isset($_POST['xyz_photo_nonce']) || !wp_verify_nonce($_POST['xyz_photo_nonce'], 'xyz_photo_meta_nonce')) return;
     if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) return;
     if (wp_is_post_revision($post_id)) return;
-    if (get_post_type($post_id) !== 'photo_item') return;
+    if (get_post_type($post_id) !== 'map_photo') return;
     if (!current_user_can('edit_post', $post_id)) return;
 
     $place_id = isset($_POST['xyz_place_id']) ? (int) $_POST['xyz_place_id'] : 0;
@@ -72,10 +53,10 @@ function xyz_photo_save_post($post_id) {
 }
 add_action('save_post_photo_item', 'xyz_photo_save_post', 10);
 
-/** Admin assets only on photo_item edit */
+/** Admin assets only on map_photo edit */
 function xyz_photo_admin_assets($hook) {
     $screen = get_current_screen();
-    if (!$screen || $screen->post_type !== 'photo_item') return;
+    if (!$screen || $screen->post_type !== 'map_photo') return;
 
     wp_enqueue_script('jquery-ui-autocomplete');
     wp_register_script(
@@ -103,7 +84,7 @@ add_action('wp_ajax_xyz_search_places', function () {
 
     $term = isset($_GET['term']) ? sanitize_text_field(wp_unslash($_GET['term'])) : '';
     $q = new WP_Query([
-        'post_type'      => 'gallery_item',
+        'post_type'      => 'map_marker',
         'post_status'    => 'publish',
         's'              => $term,
         'posts_per_page' => 20,
@@ -130,7 +111,7 @@ function xyz_update_place_photo_stats($place_id){
 
     // 1 zapytanie: policz i weź najnowsze foto (dla miniatury)
     $q = new WP_Query([
-        'post_type'      => 'photo_item',
+        'post_type'      => 'map_photo',
         'post_status'    => 'publish',
         'meta_query'     => [[ 'key'=>'_place_id','value'=>$place_id,'compare'=>'=','type'=>'NUMERIC' ]],
         'posts_per_page' => 1,
@@ -151,7 +132,7 @@ function xyz_update_place_photo_stats($place_id){
     update_post_meta($place_id, '_photo_thumb_id', $thumb_id);
 }
 
-// Zapis photo_item: uwzględnij przeniesienie między miejscami
+// Zapis map_photo: uwzględnij przeniesienie między miejscami
 add_action('save_post_photo_item', function($post_id){
     if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) return;
     if (!current_user_can('edit_post',$post_id)) return;
@@ -165,24 +146,24 @@ add_action('save_post_photo_item', function($post_id){
 
 // Zmiany statusu / kosz
 add_action('trashed_post', function($post_id){
-    if (get_post_type($post_id)!=='photo_item') return;
+    if (get_post_type($post_id)!=='map_photo') return;
     $place = (int) get_post_meta($post_id,'_place_id',true);
     if ($place) xyz_update_place_photo_stats($place);
 });
 add_action('untrashed_post', function($post_id){
-    if (get_post_type($post_id)!=='photo_item') return;
+    if (get_post_type($post_id)!=='map_photo') return;
     $place = (int) get_post_meta($post_id,'_place_id',true);
     if ($place) xyz_update_place_photo_stats($place);
 });
 add_action('before_delete_post', function($post_id){
-    if (get_post_type($post_id)!=='photo_item') return;
+    if (get_post_type($post_id)!=='map_photo') return;
     $place = (int) get_post_meta($post_id,'_place_id',true);
     if ($place) xyz_update_place_photo_stats($place);
 });
 
 function xyz_rebuild_all_place_photo_stats(){
     $ids = get_posts([
-        'post_type'      => 'gallery_item',
+        'post_type'      => 'map_marker',
         'post_status'    => 'any',
         'fields'         => 'ids',
         'numberposts'    => -1,

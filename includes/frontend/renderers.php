@@ -47,7 +47,7 @@ function xyz_render_big_map($map_id){
 
   if (!$payload) {
     $marker_ids = get_posts([
-      'post_type'=>'gallery_item','post_status'=>'publish',
+      'post_type'=>'map_marker','post_status'=>'publish',
       'posts_per_page'=>-1,'fields'=>'ids','no_found_rows'=>true,
       'meta_query'=>[[ 'key'=>'_map_id','value'=>$map_id,'compare'=>'=' ]]
     ]);
@@ -91,6 +91,7 @@ function xyz_render_big_map($map_id){
       'zoomLevels'      => ['min'=>(int)$map->zoom_min, 'max'=>(int)$map->zoom_max],
       'bounds'          => $bounds,
       'mapMode'         => $map->mode,
+      'center'          => (isset($map->center_lat) && isset($map->center_lng) && $map->center_lat !== null && $map->center_lng !== null) ? [ (float)$map->center_lat, (float)$map->center_lng ] : null,
       'markers'         => $markers,
       'cluster_markers' => (int)$map->cluster_markers,
       'pluginUrl'       => plugins_url('', XYZ_MAP_GALLERY_FILE),
@@ -138,7 +139,7 @@ function xyz_render_place_gallery($place_id, $per_page=24){
   if (!$place_id) return '';
 
   $q = new \WP_Query([
-    'post_type'=>'photo_item','post_status'=>'publish',
+    'post_type'=>'map_photo','post_status'=>'publish',
     'meta_query'=>[['key'=>'_place_id','value'=>$place_id,'compare'=>'=']],
     'posts_per_page'=>(int)$per_page,
     'paged'=>max(1,(int)get_query_var('paged', get_query_var('page',1))),

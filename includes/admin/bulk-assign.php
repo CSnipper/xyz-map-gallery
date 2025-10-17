@@ -4,7 +4,7 @@ if (!defined('ABSPATH')) exit;
 /**
  * 1) Add an item to the bulk actions menu
  */
-add_filter('bulk_actions-edit-gallery_item', function($actions){
+add_filter('bulk_actions-edit-map_marker', function($actions){
     $actions['xyz_assign_map'] = __('Assign to map…', 'xyz-map-gallery');
     return $actions;
 });
@@ -14,59 +14,20 @@ add_filter('bulk_actions-edit-gallery_item', function($actions){
  */
 add_action('admin_footer-edit.php', function () {
     $screen = get_current_screen();
-    if (!$screen || $screen->id !== 'edit-gallery_item') return;
+    if (!$screen || $screen->id !== 'edit-map_marker') return;
 
     global $wpdb;
     $tbl = $wpdb->prefix.'xyz_maps';
     $rows = $wpdb->get_results("SELECT id, name FROM {$tbl} ORDER BY name ASC");
     ?>
-    <script>
-    (function(){
-      const forms = document.querySelectorAll('form#posts-filter');
-      if(!forms.length) return;
-
-      forms.forEach(function(form){
-        const bulk1 = form.querySelector('select[name="action"]');
-        if(!bulk1) return;
-
-        const wrap = document.createElement('span');
-        wrap.style.marginLeft = '8px';
-        wrap.innerHTML = '<?php
-          $html  = '<label style="margin-left:6px;">'.esc_js(__('Map:', 'xyz-map-gallery')).' ';
-          $html .= '<select name="xyz_target_map" id="xyz_target_map">';
-          $html .= '<option value="">'.esc_js(__('— choose —','xyz-map-gallery')).'</option>';
-          foreach($rows as $r){
-            $label = $r->name ?: ('#'.$r->id);
-            $html .= '<option value="'.(int)$r->id.'">'.esc_js($label).'</option>';
-          }
-          $html .= '</select></label>';
-          echo $html;
-        ?>';
-        bulk1.after(wrap);
-      });
-
-      document.addEventListener('submit', function(e){
-        const form = e.target;
-        if(!form || form.id !== 'posts-filter') return;
-        const actionSel = form.querySelector('select[name="action"], select[name="action2"]');
-        const actionVal = actionSel ? actionSel.value : '';
-        if(actionVal === 'xyz_assign_map'){
-          const mapSel = form.querySelector('#xyz_target_map');
-          if(!mapSel || !mapSel.value){
-            e.preventDefault();
-            alert('<?php echo esc_js(__('Please choose a map first.', 'xyz-map-gallery')); ?>');
-          }
-        }
-      }, true);
-    })();
-    </script>
+    <!-- Bulk assign UI behavior moved to enqueued script assets/js/admin-bulk.js -->
     <?php
 });
 
 /**
  * ...existing code...
  */
-add_filter('handle_bulk_actions-edit-gallery_item', function($redirect_to, $doaction, $post_ids){
+add_filter('handle_bulk_actions-edit-map_marker', function($redirect_to, $doaction, $post_ids){
     if ($doaction !== 'xyz_assign_map') return $redirect_to;
 
     if (!current_user_can('edit_posts')) {

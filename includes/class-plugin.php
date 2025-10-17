@@ -46,6 +46,11 @@ class Plugin {
         register_setting('xyz_maps_group','xyz_show_wpbakery',    ['type'=>'integer','default'=>1]);
         register_setting('xyz_maps_group','xyz_enable_shortcode', ['type'=>'integer','default'=>1]);
         register_setting('xyz_maps_group','xyz_show_shortcode',   ['type'=>'integer','default'=>1]);
+
+    // Search fields settings: which fields should be included in client-side search
+    register_setting('xyz_maps_group','xyz_search_title', ['type'=>'integer','default'=>1]);
+    register_setting('xyz_maps_group','xyz_search_content', ['type'=>'integer','default'=>0]);
+  register_setting('xyz_maps_group','xyz_search_taxonomies', ['type'=>'array','default'=>[]]);
     }
 
     public function settings_page(){
@@ -64,6 +69,14 @@ class Plugin {
                 update_option('xyz_enable_shortcode',  !empty($_POST['xyz_enable_shortcode']) ? 1 : 0);
                 update_option('xyz_show_shortcode',    !empty($_POST['xyz_show_shortcode'])   ? 1 : 0);
 
+                // search fields
+                update_option('xyz_search_title',       !empty($_POST['xyz_search_title']) ? 1 : 0);
+                update_option('xyz_search_content',     !empty($_POST['xyz_search_content']) ? 1 : 0);
+                // taxonomies: store array of selected tax names
+                $sel_tax = isset($_POST['xyz_search_taxonomies']) ? (array) $_POST['xyz_search_taxonomies'] : [];
+                $sel_tax = array_map('sanitize_text_field', $sel_tax);
+                update_option('xyz_search_taxonomies',  $sel_tax);
+
                 echo '<div class="updated"><p>'.esc_html__('Settings saved.','xyz-map-gallery').'</p></div>';
               }
 
@@ -76,6 +89,9 @@ class Plugin {
               $wpbakery_front  = (int) get_option('xyz_show_wpbakery',    1);
               $short_on        = (int) get_option('xyz_enable_shortcode', 1);
               $short_front     = (int) get_option('xyz_show_shortcode',   1);
+              $search_title    = (int) get_option('xyz_search_title', 1);
+              $search_content  = (int) get_option('xyz_search_content', 0);
+              $search_taxo     = (array) get_option('xyz_search_taxonomies', []);
             ?>
         <div class="wrap">
           <h1><?php _e('XYZ Map Gallery Settings','xyz-map-gallery'); ?></h1>
@@ -117,6 +133,27 @@ class Plugin {
                   <label><input type="checkbox" name="xyz_show_shortcode"   id="xyz_show_shortcode"   value="1" <?php checked($short_front,1); ?>> <?php _e('Render on front-end','xyz-map-gallery'); ?></label>
                 </td>
               </tr>
+
+              <tr><th><?php _e('Client-side search fields','xyz-map-gallery'); ?></th>
+                <td>
+                  <label><input type="checkbox" name="xyz_search_title" value="1" <?php checked($search_title,1); ?>> <?php _e('Title','xyz-map-gallery'); ?></label><br>
+                  <label><input type="checkbox" name="xyz_search_content" value="1" <?php checked($search_content,1); ?>> <?php _e('Content','xyz-map-gallery'); ?></label><br>
+          <?php
+          // list all taxonomies attached to map_marker and allow selecting which to include
+          $marker_tax = get_object_taxonomies('map_marker','objects');
+          if (empty($marker_tax)) {
+            echo '<div class="description">'.esc_html__('No taxonomies registered for map_marker.','xyz-map-gallery').'</div>';
+          } else {
+            foreach ($marker_tax as $tax_name => $tax_obj) {
+              $checked = in_array($tax_name, $search_taxo, true);
+              printf('<label><input type="checkbox" name="xyz_search_taxonomies[]" value="%s" %s> %s</label><br>',
+                esc_attr($tax_name), $checked ? 'checked' : '', esc_html($tax_obj->labels->name)
+              );
+            }
+          }
+          ?>
+                </td>
+              </tr>
             </table>
 
             <p><input type="submit" name="xyz_map_settings" class="button-primary" value="<?php esc_attr_e('Save Settings','xyz-map-gallery'); ?>"></p>
@@ -151,7 +188,7 @@ class Plugin {
       global $wpdb;
       $table = $wpdb->prefix.'xyz_maps';
       $map = $wpdb->get_row($wpdb->prepare(
-        "SELECT id, tiles_url, mode, zoom_min, zoom_max, bounds, image_width, image_height
+        "SELECT id, tiles_url, mode, zoom_min, zoom_max, bounds, image_width, image_height, center_lat, center_lng
          FROM $table WHERE id=%d", $map_id
       ));
       if ( ! $map ) {
@@ -178,6 +215,11 @@ class Plugin {
         'image_width'  => max(0, (int)$map->image_width ?: 400),
         'image_height' => max(0, (int)$map->image_height ?: 400),
       ];
+
+      // include saved center if present
+      if (!empty($map->center_lat) && !empty($map->center_lng)) {
+        $data['center'] = [ (float)$map->center_lat, (float)$map->center_lng ];
+      }
 
       wp_send_json_success($data);
     }
@@ -236,8 +278,36 @@ class Plugin {
       }
       set_transient($key, $hits, 30);
 
+      // Admin-only debug mode: return matched IDs but rate-limit per admin user to avoid console spamming.
+      if (!empty($_REQUEST['xyz_debug']) && current_user_can('manage_options')) {
+        $user_id = get_current_user_id() ?: 0;
+        $dbg_key = 'xyz_bbox_debug_uid_' . (int)$user_id;
+        $dbg_ttl = 20; // seconds cooldown per admin
+        $last = get_transient($dbg_key);
+        if ($last) {
+          $remaining = max(0, $dbg_ttl - (time() - (int)$last));
+          wp_send_json_error(['message' => 'debug cooldown', 'retry_after' => $remaining], 429);
+        }
+        // mark debug used now
+        set_transient($dbg_key, time(), $dbg_ttl);
+
+        // return matched ids for debugging: which markers have meta _map_id == requested map
+        $matched = [];
+        $all_ids = get_posts([
+          'post_type'=>'map_marker','post_status'=>'publish','fields'=>'ids',
+          'posts_per_page'=>-1,'no_found_rows'=>true
+        ]);
+        if (!empty($all_ids)) {
+          foreach ($all_ids as $pid) {
+            $mid = get_post_meta($pid,'_map_id',true);
+            if ((string)$mid === (string)$map_id) $matched[] = (int)$pid;
+          }
+        }
+        wp_send_json_success(['matched_ids'=>$matched]);
+      }
+
     $ids = get_posts([
-      'post_type'=>'gallery_item','post_status'=>'publish','fields'=>'ids',
+      'post_type'=>'map_marker','post_status'=>'publish','fields'=>'ids',
       'posts_per_page'=>-1,'no_found_rows'=>true,
       'meta_query'=>[[ 'key'=>'_map_id','value'=>$map_id,'compare'=>'=' ]]
     ]);
@@ -260,13 +330,37 @@ class Plugin {
       if ($lat<$south || $lat>$north) continue;
       if ($lng<$west  || $lng>$east)  continue;
 
-      $icon = get_post_meta($id,'_map_icon',true);
-      $tag_terms   = get_the_terms($id,'post_tag');  if (is_wp_error($tag_terms)||!is_array($tag_terms)) $tag_terms=[];
-      $owner_terms = get_the_terms($id,'owner');     if (is_wp_error($owner_terms)||!is_array($owner_terms)) $owner_terms=[];
-      $tag_names   = array_map(fn($t)=>$t->name, $tag_terms);
-      $owner_names = array_map(fn($t)=>$t->name, $owner_terms);
+    $icon = get_post_meta($id,'_map_icon',true);
+    $selected_taxos = (array) get_option('xyz_search_taxonomies', []);
+    $term_names = [];
+    if (!empty($selected_taxos)) {
+      foreach ($selected_taxos as $tax) {
+        $terms = get_the_terms($id, $tax);
+        if (is_wp_error($terms) || !is_array($terms) || empty($terms)) continue;
+        foreach ($terms as $t) $term_names[] = $t->name;
+      }
+    }
+    $tag_names = $term_names;
+    $owner_names = []; // kept for compatibility in the output structure
       $owner       = !empty($owner_names) ? implode(', ', $owner_names) : '';
-      $keywords_str = trim(implode(' ', array_filter(array_merge([get_the_title($id)], $tag_names, $owner_names))));
+
+      // Build keywords based on plugin settings
+      $kw_parts = [];
+      $use_title = (bool) get_option('xyz_search_title', true);
+      $use_content = (bool) get_option('xyz_search_content', false);
+      $use_taxo = (bool) get_option('xyz_search_taxonomies', true);
+      if ($use_title) {
+        $kw_parts[] = get_the_title($id);
+      }
+      if ($use_content) {
+        $content = wp_strip_all_tags(get_post_field('post_content', $id));
+        if ($content) $kw_parts[] = $content;
+      }
+      if ($use_taxo) {
+        if (!empty($tag_names)) $kw_parts = array_merge($kw_parts, $tag_names);
+        if (!empty($owner_names)) $kw_parts = array_merge($kw_parts, $owner_names);
+      }
+      $keywords_str = trim(implode(' ', array_filter($kw_parts)));
 
       $thumb_id     = (int) get_post_meta($id,'_photo_thumb_id',true);
       $photos_count = (int) get_post_meta($id,'_photo_count',true);
