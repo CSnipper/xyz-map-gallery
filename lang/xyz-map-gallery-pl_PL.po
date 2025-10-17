@@ -99,3 +99,273 @@ msgstr "Nadpisz istniejące"
 
 msgid "Run import"
 msgstr "Uruchom import"
+
+msgid "Maps"
+msgstr "Maps"
+
+msgid "Settings"
+msgstr "Settings"
+
+msgid "Settings saved."
+msgstr "Settings saved."
+
+msgid "WooCommerce not detected."
+msgstr "WooCommerce not detected."
+
+msgid "No taxonomies registered for map_marker."
+msgstr "No taxonomies registered for map_marker."
+
+msgid "No map selected."
+msgstr "No map selected."
+
+msgid "XYZ Map Gallery Settings"
+msgstr "XYZ Map Gallery Settings"
+
+msgid "Enable WooCommerce"
+msgstr "Enable WooCommerce"
+
+msgid "Gutenberg"
+msgstr "Gutenberg"
+
+msgid "Enable blocks"
+msgstr "Enable blocks"
+
+msgid "Render on front-end"
+msgstr "Render on front-end"
+
+msgid "Elementor"
+msgstr "Elementor"
+
+msgid "Enable widgets"
+msgstr "Enable widgets"
+
+msgid "WPBakery"
+msgstr "WPBakery"
+
+msgid "Enable integration"
+msgstr "Enable integration"
+
+msgid "Shortcodes"
+msgstr "Shortcodes"
+
+msgid "Enable shortcodes"
+msgstr "Enable shortcodes"
+
+msgid "Client-side search fields"
+msgstr "Client-side search fields"
+
+msgid "Save Settings"
+msgstr "Save Settings"
+
+msgid "Markers"
+msgstr "Markers"
+
+msgid "Photos"
+msgstr "Photos"
+
+msgid "Photo"
+msgstr "Photo"
+
+msgid "Close"
+msgstr "Close"
+
+msgid "Select"
+msgstr "Select"
+
+msgid "Reset Center"
+msgstr "Reset Center"
+
+msgid "Map:"
+msgstr "Map:"
+
+msgid "— choose —"
+msgstr "— choose —"
+
+msgid "Please choose a map first."
+msgstr "Please choose a map first."
+
+msgid "Assign to map…"
+msgstr "Assign to map…"
+
+msgid "%d item(s) assigned to map #%d."
+msgstr "%d item(s) assigned to map #%d."
+
+msgid "No map selected for bulk action."
+msgstr "No map selected for bulk action."
+
+msgid "You do not have permission to perform this action."
+msgstr "You do not have permission to perform this action."
+
+msgid "All required fields must be filled."
+msgstr "All required fields must be filled."
+
+msgid "Map updated."
+msgstr "Map updated."
+
+msgid "Map saved."
+msgstr "Map saved."
+
+msgid "Failed to save map."
+msgstr "Failed to save map."
+
+msgid "Edit Map"
+msgstr "Edit Map"
+
+msgid "Map Name"
+msgstr "Map Name"
+
+msgid "Map Mode"
+msgstr "Map Mode"
+
+msgid "Geographic"
+msgstr "Geographic"
+
+msgid "Image-based"
+msgstr "Image-based"
+
+msgid "Tile URL"
+msgstr "Tile URL"
+
+msgid "Image Width"
+msgstr "Image Width"
+
+msgid "Image Height"
+msgstr "Image Height"
+
+msgid "Map Bounds"
+msgstr "Map Bounds"
+
+msgid "Lat 1"
+msgstr "Lat 1"
+
+msgid "Lng 1"
+msgstr "Lng 1"
+
+msgid "Lat 2"
+msgstr "Lat 2"
+
+msgid "Lng 2"
+msgstr "Lng 2"
+
+msgid "Min Zoom"
+msgstr "Min Zoom"
+
+msgid "Max Zoom"
+msgstr "Max Zoom"
+
+msgid "Cluster Markers"
+msgstr "Cluster Markers"
+
+msgid "Click on the map to set the center point that the big map will use when loaded. Click Reset to clear."
+msgstr "Click on the map to set the center point that the big map will use when loaded. Click Reset to clear."
+
+msgid "Save Map"
+msgstr "Save Map"
+
+msgid "Add New Map"
+msgstr "Add New Map"
+
+msgid "Map List"
+msgstr "Map List"
+
+msgid "Edit"
+msgstr "Edit"
+
+msgid "No maps found."
+msgstr "No maps found."
+
+msgid "Marker Settings"
+msgstr "Marker Settings"
+
+msgid "No shared taxonomies between markers and photos."
+msgstr "No shared taxonomies between markers and photos."
+
+msgid "&mdash; none &mdash;"
+msgstr "&mdash; none &mdash;"
+
+msgid "When set, the gallery will include photos that share the same term(s) in this taxonomy as the marker."
+msgstr "When set, the gallery will include photos that share the same term(s) in this taxonomy as the marker."
+
+msgid "Default"
+msgstr "Default"
+
+msgid "All maps"
+msgstr "All maps"
+
+msgid "Unassigned"
+msgstr "Unassigned"
+
+msgid "Select Map"
+msgstr "Select Map"
+
+msgid "Default Map"
+msgstr "Default Map"
+
+msgid "Search Address"
+msgstr "Search Address"
+
+msgid "e.g., Maniowy 16, Poland"
+msgstr "e.g., Maniowy 16, Poland"
+
+msgid "Pin Position"
+msgstr "Pin Position"
+
+msgid "Choose Icon"
+msgstr "Choose Icon"
+
+msgid "Sale Item (WooCommerce)"
+msgstr "Sale Item (WooCommerce)"
+
+msgid "Linked Product"
+msgstr "Linked Product"
+
+msgid "Create New or Select"
+msgstr "Create New or Select"
+
+msgid "Photo linkage taxonomy"
+msgstr "Photo linkage taxonomy"
+
+msgid "Linked Place"
+msgstr "Linked Place"
+
+msgid "No places found"
+msgstr "No places found"
+
+msgid "Type to search places…"
+msgstr "Type to search places…"
+
+msgid "Clear"
+msgstr "Clear"
+
+msgid "Height (px)"
+msgstr "Height (px)"
+
+msgid "Pick a place in widget settings."
+msgstr "Pick a place in widget settings."
+
+msgid "Renderer missing (xyz_render_place_minimap)."
+msgstr "Renderer missing (xyz_render_place_minimap)."
+
+msgid "Place (title)"
+msgstr "Place (title)"
+
+msgid "Enter place title (optional, for editing only)."
+msgstr "Enter place title (optional, for editing only)."
+
+msgid "Place ID"
+msgstr "Place ID"
+
+msgid "Pick a place."
+msgstr "Pick a place."
+
+msgid "Import markers"
+msgstr "Import markers"
+
+msgid "Import"
+msgstr "Import"
+
+msgid "Imported: %d, Updated: %d, Skipped: %d"
+msgstr "Imported: %d, Updated: %d, Skipped: %d"
+
+msgid "Errors"
+msgstr "Errors"
