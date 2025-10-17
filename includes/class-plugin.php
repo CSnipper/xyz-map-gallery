@@ -16,7 +16,8 @@ class Plugin {
     }
 
     public function load_textdomain(){
-      load_plugin_textdomain('xyz-map-gallery', false, dirname(plugin_basename(XYZ_MAP_GALLERY_FILE)).'/languages/');
+      // Domain Path in plugin header is /lang - ensure we load from the correct folder
+      load_plugin_textdomain('xyz-map-gallery', false, dirname(plugin_basename(XYZ_MAP_GALLERY_FILE)).'/lang/');
     }
 
     public function admin_menu(){
