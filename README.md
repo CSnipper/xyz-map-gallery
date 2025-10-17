@@ -4,8 +4,8 @@ XYZ Map Gallery is a WordPress plugin for creating interactive maps with custom 
 
 ## Features
 - Create unlimited custom maps
-- Add markers (gallery_items) with metadata and icons
-- Assign photos (photo_items) to markers and places
+- Add markers (map_marker) with metadata and icons
+- Assign photos (map_photo) to markers by few options (title, caption, taxonomies)
 - Display maps and galleries using Gutenberg blocks, Elementor, WPBakery, or shortcodes
 - REST API for advanced integrations
 - Ready for translation (i18n)
@@ -25,7 +25,7 @@ XYZ Map Gallery is a WordPress plugin for creating interactive maps with custom 
 2. Add markers for places, objects, or points of interest
 3. Assign photos to markers or places
 4. Display maps and galleries anywhere on your site
-5. (Optionally) sell photos via WooCommerce
+5. (Future) sell photos via WooCommerce
 
 ## Requirements
 - WordPress 5.6+
