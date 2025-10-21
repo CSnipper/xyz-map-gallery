@@ -25,7 +25,17 @@
     }).addTo(map);
 
     map.setView([lat, lng], Math.max(zmin + 1, 15));
-    L.marker([lat, lng]).addTo(map);
+    var marker = L.marker([lat, lng]).addTo(map);
+    // If the server provided a marker link (used when mini-map is shown for a map_photo),
+    // show a tooltip on hover and navigate to the single marker page on click.
+    var markerLink = el.getAttribute('data-marker-link');
+    if (markerLink){
+      marker.bindTooltip('Przejdź do lokalizacji powiązanej ze zdjęciem', {permanent:false, direction:'top', offset:[0,-8]});
+      marker.on('mouseover', function(){ this.openTooltip(); });
+      marker.on('mouseout', function(){ this.closeTooltip(); });
+      marker.getElement && marker.getElement() && marker.getElement().style && (marker.getElement().style.cursor = 'pointer');
+      marker.on('click', function(){ window.location.href = markerLink; });
+    }
 
     el.dataset.xyzInited = '1';
   }
