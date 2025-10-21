@@ -40,6 +40,29 @@ add_action('enqueue_block_editor_assets', function () {
         '1.0.0',
         true
     );
+
+        // Small always-loaded script to expose localized block settings to the editor console
+        wp_register_script(
+            'xyz-block-settings',
+            plugins_url('includes/blocks/block-settings.js', XYZ_MAP_GALLERY_FILE),
+            ['wp-i18n'],
+            '1.0.0',
+            true
+        );
+
+        // Localize editor settings for blocks (whether linking taxonomy is enabled)
+        $link_tax = (string) get_option('xyz_link_taxonomy', '');
+        $settings = [
+            'linkingEnabled' => !empty($link_tax) ? true : false,
+            'sidebarHint'    => __('Marker will be linked according to plugin settings. If you want to force a specific marker, pick a place in the sidebar.','xyz-map-gallery'),
+        ];
+        // Localize into a small always-enqueued script so the object is available in console even
+        // when the block-specific script isn't loaded yet by the editor.
+        wp_localize_script('xyz-block-settings', 'xyzBlockSettings', $settings);
+        wp_enqueue_script('xyz-block-settings');
+
+        // Editor CSS for small hints
+        wp_enqueue_style('xyz-editor-hints', plugins_url('assets/css/editor-hints.css', XYZ_MAP_GALLERY_FILE), [], '1.0.0');
 });
 
 
