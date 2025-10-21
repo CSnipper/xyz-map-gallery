@@ -11,12 +11,28 @@ License URI: https://www.gnu.org/licenses/gpl-2.0.html
 */
 if (!defined('ABSPATH')) exit;
 
-// Load translations early so plugin name / menu labels are available immediately
-load_plugin_textdomain('xyz-map-gallery', false, dirname(plugin_basename(__FILE__)).'/lang/');
 
 define('XYZ_MG_FILE', __FILE__);
 define('XYZ_MAP_GALLERY_FILE', __FILE__);
 define('XYZ_MAP_GALLERY_URL', plugin_dir_url(__FILE__));
+
+// Load plugin textdomain early from the plugin's /lang/ directory so admin menus can be translated
+load_plugin_textdomain( 'xyz-map-gallery', false, dirname( plugin_basename( __FILE__ ) ) . '/lang' );
+
+// Debug notice removed — textdomain is loaded earlier to ensure admin labels are translated
+
+// Temporary debug notice: shows get_locale() and translation for the editor sidebar hint.
+// Visible only to users with manage_options. Remove after verification.
+add_action('admin_notices', function(){
+        if (!is_admin() || !current_user_can('manage_options')) return;
+        $msg = __('Marker will be linked according to plugin settings. If you want to force a specific marker, pick a place in the sidebar.', 'xyz-map-gallery');
+        printf('<div class="notice notice-info"><p><strong>%s</strong><br/>%s: <code>%s</code></p></div>',
+            esc_html__('xyz-map-gallery i18n debug','xyz-map-gallery'),
+            esc_html__('get_locale()','xyz-map-gallery'),
+            esc_html(get_locale())
+        );
+        printf('<div class="notice"><p>%s: <code>%s</code></p></div>', esc_html__('Translation for sidebar hint','xyz-map-gallery'), esc_html($msg));
+});
 
 add_action('wp_enqueue_scripts', function () {
     // Załaduj jQuery z pakietu WP
