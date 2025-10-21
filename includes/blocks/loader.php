@@ -56,10 +56,17 @@ add_action('enqueue_block_editor_assets', function () {
             'linkingEnabled' => !empty($link_tax) ? true : false,
             'sidebarHint'    => __('Marker will be linked according to plugin settings. If you want to force a specific marker, pick a place in the sidebar.','xyz-map-gallery'),
         ];
-        // Localize into a small always-enqueued script so the object is available in console even
-        // when the block-specific script isn't loaded yet by the editor.
-        wp_localize_script('xyz-block-settings', 'xyzBlockSettings', $settings);
-        wp_enqueue_script('xyz-block-settings');
+            // Instead of localizing an already-translated string (which may be generated
+            // before the textdomain is available for JS), pass the raw msgid and let
+            // wp.i18n translate it in the editor. Register script translations for the
+            // small helper script so wp.i18n.__() works.
+            $settings['sidebarHintMsgid'] = 'Marker will be linked according to plugin settings. If you want to force a specific marker, pick a place in the sidebar.';
+            wp_localize_script('xyz-block-settings', 'xyzBlockSettings', $settings);
+            // make sure JS translations are available for this script (reads from /lang)
+            if ( function_exists('wp_set_script_translations') ) {
+                wp_set_script_translations('xyz-block-settings', 'xyz-map-gallery', plugin_dir_path(XYZ_MAP_GALLERY_FILE) . 'lang');
+            }
+            wp_enqueue_script('xyz-block-settings');
 
         // Editor CSS for small hints
         wp_enqueue_style('xyz-editor-hints', plugins_url('assets/css/editor-hints.css', XYZ_MAP_GALLERY_FILE), [], '1.0.0');
