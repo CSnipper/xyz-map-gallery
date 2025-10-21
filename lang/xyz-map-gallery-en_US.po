@@ -99,3 +99,7 @@ msgstr "Overwrite existing"
 
 msgid "Run import"
 msgstr "Run import"
+
+
+msgid "Marker will be linked according to plugin settings. If you want to force a specific marker, pick a place in the sidebar."
+msgstr "Marker will be linked according to plugin settings. If you want to force a specific marker, pick a place in the sidebar."
