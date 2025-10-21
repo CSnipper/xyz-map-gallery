@@ -103,3 +103,5 @@ msgstr "Run import"
 
 msgid "Marker will be linked according to plugin settings. If you want to force a specific marker, pick a place in the sidebar."
 msgstr "Marker will be linked according to plugin settings. If you want to force a specific marker, pick a place in the sidebar."
+msgid "Go to the location linked to this photo"
+msgstr "Go to the location linked to this photo"

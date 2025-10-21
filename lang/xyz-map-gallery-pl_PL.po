@@ -366,3 +366,5 @@ msgstr "Wpisz tytuł mapy, aby wyszukać…"
 
 msgid "Type place title to search…"
 msgstr "Wpisz tytuł miejsca, aby wyszukać…"
+msgid "Go to the location linked to this photo"
+msgstr "Przejd� do lokalizacji powi�zanej ze zdj�ciem"
